@@ -12,26 +12,25 @@ import logging.config
 
 
 neutral = {
-    2 : 480,
+    
     3 : 435,
     4 : 610,
     5 : 500,
-
     8 : 280,
+    13 : 305,
+    14 : 570,
     9 : 480,
     10 : 550,
     11 : 500,
-
-    14 : 305,
+    2 : 480,
+    12 : 330,
     15 : 470,
     16 : 560,
     17 : 500,
-
     20 : 250,
     21 : 480,
     22 : 560,
     23 : 500
-
 }
 
 class HTD45H:
@@ -622,18 +621,15 @@ if __name__ == '__main__':
     m3 = HTD45H(port='/dev/ttyAMA3') # 13-16 # 9-12
     m4 = HTD45H(port='/dev/ttyAMA4') # 1-4   # 13-16
 
-    #m4.set_id(4, 14)
-    #for i in [3, 4, 5, 8, 14, 21, 22, 23]:
-    
-    for i in range(24):
+    for i in [3, 4, 5, 8, 13, 14, 21, 22, 23]:
         m3.read_values(i)
         time.sleep(0.0002)
-    #for i in [2, 9, 10, 11, 15, 16, 17, 20]:
-    for i in range(24):
+    for i in [2, 9, 10, 11, 12, 15, 16, 17, 20]:
         m4.read_values(i)
         time.sleep(0.0002)
-    
-    #m3.move_servo_to_angle(20, -60, 3000)
+
+    #test_servo = 23
+    #m3.move_servo_to_angle(test_servo, 0, 3000)
     #time.sleep(3)
-    #m3.disable_torque(20)
+    #m3.disable_torque(test_servo)
     

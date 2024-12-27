@@ -31,57 +31,42 @@ class RobotPositionLeg():
         return f'a: {self.alpha}, b: {self.beta}, t: {self.tetta}'
 
 class RobotPosition():
-    def __init__(self, 
-            leg1_tetta,
-            leg1_alpha,
-            leg1_beta,
-
-            leg2_tetta,
-            leg2_alpha,
-            leg2_beta,
-
-            leg3_tetta,
-            leg3_alpha,
-            leg3_beta,
-
-            leg4_tetta,
-            leg4_alpha,
-            leg4_beta,
-
-            leg5_tetta,
-            leg5_alpha,
-            leg5_beta,
-
-            leg6_tetta,
-            leg6_alpha,
-            leg6_beta
-            ):
-        leg1 = RobotPositionLeg(leg1_alpha, leg1_beta, leg1_tetta)
-        leg2 = RobotPositionLeg(leg2_alpha, leg2_beta, leg2_tetta)
-        leg3 = RobotPositionLeg(leg3_alpha, leg3_beta, leg3_tetta)
-        leg4 = RobotPositionLeg(leg4_alpha, leg4_beta, leg4_tetta)
-        leg5 = RobotPositionLeg(leg5_alpha, leg5_beta, leg5_tetta)
-        leg6 = RobotPositionLeg(leg6_alpha, leg6_beta, leg6_tetta)
+    valid_fields = (
+        "l1a", "l1b", "l1t", 
+        "l2a", "l2b", "l2t", 
+        "l3a", "l3b", "l3t", 
+        "l4a", "l4b", "l4t", 
+        "l5a", "l5b", "l5t", 
+        "l6a", "l6b", "l6t"
+    )
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            if k not in self.valid_fields:
+                raise TypeError(f'Wrong attribute: {k}')
+            self.__setattr__(k, v)
+        #leg1 = RobotPositionLeg(self.l1a, self.l1b, self.l1t)
+        #leg2 = RobotPositionLeg(self.l2a, self.l2b, self.l2t)
+        #leg3 = RobotPositionLeg(self.l3a, self.l3b, self.l3t)
+        #leg4 = RobotPositionLeg(self.l4a, self.l4b, self.l4t)
+        #leg5 = RobotPositionLeg(self.l5a, self.l5b, self.l5t)
+        #leg6 = RobotPositionLeg(self.l6a, self.l6b, self.l6t)
                            
-        self.legs = {
-            1: leg1, 2: leg2, 3: leg3, 4: leg4, 5: leg5, 6: leg6,
-        }
+        #self.legs = {
+        #    1: leg1, 2: leg2, 3: leg3, 4: leg4, 5: leg5, 6: leg6,
+        #}
 
-    def to_servo(self):
-        return [
-            self.legs[1].beta, self.legs[1].alpha, self.legs[1].tetta,
-            self.legs[2].beta, self.legs[2].alpha, self.legs[2].tetta,
-            self.legs[3].beta, self.legs[3].alpha, self.legs[3].tetta,
-            self.legs[4].beta, self.legs[4].alpha, self.legs[4].tetta,
-            self.legs[5].beta, self.legs[5].alpha, self.legs[5].tetta,
-            self.legs[6].beta, self.legs[6].alpha, self.legs[6].tetta,
-        ]
+    def __sub__(self, cmp):
+        return 0
+    
+    @property
+    def servo_values(self):
+        return self.__dict__.items()
 
     def __hash__(self):
-        return hash(self.to_servo())
+        return hash(self.__dict__.values())
 
-    def __repr__(self):
-        return f'\n1: {self.legs[1]}\n2: {self.legs[2]}\n3: {self.legs[3]}\n4: {self.legs[4]}\n5: {self.legs[5]}\n6: {self.legs[6]}\n'
+    #def __repr__(self):
+    #    return f'\n1: {self.legs[1]}\n2: {self.legs[2]}\n3: {self.legs[3]}\n4: {self.legs[4]}\n5: {self.legs[5]}\n6: {self.legs[6]}\n'
 
 def build_position_from_servos(servo_angles: List[float]) -> RobotPosition:
     # incoming angles: beta, alpha, tetta for leg 1 to 6
@@ -130,34 +115,26 @@ def find_angles(Cx, Cy, logger):
 
     return alpha, beta
 
-def calculate_leg_angles(O: Point, C: Point, logger):
-    tetta = math.atan2(C.y - O.y, C.x - O.x)
-    A = Point(O.x + leg.d * math.cos(tetta),
-                O.y + leg.d * math.sin(tetta),
-                O.z)
-    logger.info(f'{math.degrees(tetta)}, {A}')
+def calculate_leg_angles(C: Point, logger):    
+    tetta = math.atan2(C.y, C.x)
 
-    l = round(math.sqrt((C.x - A.x) ** 2 + (C.y - A.y) ** 2), 2)
-    delta_z = round(C.z - O.z, 2)
-    logger.info(f'Trying l {l} and delta_z {delta_z}')
+    l = round(math.sqrt(C.x ** 2 + C.y ** 2), 2)
+    delta_z = round(C.z, 2)
+    #logger.info(f'Trying l {l} and delta_z {delta_z}')
     alpha, beta = find_angles(l, delta_z, logger)
-    logger.info(f'Success : {math.degrees(alpha)}, {math.degrees(beta)}')
+    #logger.info(f'Success : {math.degrees(alpha)}, {math.degrees(beta)}')
 
     return tetta, alpha, beta
 
-def calculate_C_point(O: Point, tetta: float, alpha: float, beta: float) -> Point:
-    A = Point(O.x + leg.d * math.cos(tetta),
-                O.y + leg.d * math.sin(tetta),
-                O.z)
-
+def calculate_C_point(tetta: float, alpha: float, beta: float) -> Point:
     B_xz = [leg.a * math.cos(alpha),
             leg.a * math.sin(alpha)]
     C_xz = [B_xz[0] + leg.b * math.cos(alpha - beta),
             B_xz[1] + leg.b * math.sin(alpha - beta)]
 
-    C = Point(round(A.x + C_xz[0] * math.cos(tetta), 2),
-                    round(A.y + C_xz[0] * math.sin(tetta), 2),
-                    round(A.z + C_xz[1], 2))
+    C = Point(round(C_xz[0] * math.cos(tetta), 2),
+                    round(C_xz[0] * math.sin(tetta), 2),
+                    round(C_xz[1], 2))
 
     return C
 
