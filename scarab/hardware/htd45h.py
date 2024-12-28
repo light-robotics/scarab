@@ -166,7 +166,7 @@ class HTD45H:
 
     # several attempts are made to send servo to a certain angle
     # because sometimes command does not work and target stays unchanged
-    def move_servo_to_angle(self, id: int, angle: float, rate: int = 0) -> None:
+    def move_servo_to_angle(self, id: int, angle: float, rate: int = 5000) -> None:
         position = neutral[id] + int(angle/0.24)
         if position < 0:
             self.logger.error(f'Id : {id}. Target required : {position}. Angle: {angle}')
@@ -405,7 +405,7 @@ class HTD45H:
 
     # Read servo position
     # the value can be negative then it is signed short
-    def read_position(self, id: int) -> int:
+    def read_position(self, id: int) -> int:        
         num_attempts = 3
         for attempt in range(num_attempts):
             try:
@@ -425,6 +425,8 @@ class HTD45H:
         raise Exception('Can not read values from servo {0}'.format(id))
 
     def read_angle(self, id):
+        if id == 2:
+            return 0
         num_attempts = 5
         for i in range(num_attempts):
             angle = round((self.read_position(id) - neutral[id]) * 0.24 , 2)
@@ -628,8 +630,8 @@ if __name__ == '__main__':
         m4.read_values(i)
         time.sleep(0.0002)
 
-    #test_servo = 23
-    #m3.move_servo_to_angle(test_servo, 0, 3000)
-    #time.sleep(3)
-    #m3.disable_torque(test_servo)
+    test_servo = 9
+    m4.move_servo_to_angle(test_servo, 20, 3000)
+    time.sleep(3)
+    m4.disable_torque(test_servo)
     

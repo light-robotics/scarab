@@ -13,13 +13,16 @@ class robot:
     x_offset = 0
     y_offset = 0
 
-    leg_up = 5
+    leg_up = 10
 
     diff_from_target_limit = 3.5
     diff_from_prev_limit = 0.5
 
+class movement:
+    command_advance_ms = -0.05
+
 class speed:
-    run = 300
+    run = 500
     walk = 500
 
 @dataclass
@@ -62,3 +65,19 @@ servos_boards = {
     3: 3, 4: 3, 5: 3, 8: 3, 13: 3, 14: 3, 21: 3, 22: 3, 23: 3,
     2: 4, 9: 4, 10: 4, 11: 4, 12: 4, 15: 4, 16: 4, 17: 4, 20: 4,
 }
+
+class moves:
+    up_or_down_cm = 2
+    move_body_cm = 2
+    forward_body_1_leg_cm = 5
+    forward_body_2_leg_cm = 8
+    reposition_cm = 1
+
+@dataclass
+class xy:
+    x: int
+    y: int
+
+class modes:
+    run_mode = xy(10, 10)
+    walk_mode = xy(10, 10)

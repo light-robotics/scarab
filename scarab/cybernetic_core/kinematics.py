@@ -161,29 +161,29 @@ class Kinematics:
         #return self.angles_history
     
     def build_legs_from_angles(self, rp: RobotPosition):
-        C1 = calculate_C_point(rp.legs[1])
+        C1 = calculate_C_point(rp.l1t, rp.l1a, rp.l1b)
         self.logger.info('[Init] Building leg 1')
         #print(f'Building leg 1: {math.degrees(alpha1), math.degrees(beta1), math.degrees(gamma1)}')
         Leg1 = Leg(C1)
 
-        C2 = calculate_C_point(rp.legs[2])
+        C2 = calculate_C_point(rp.l2t, rp.l2a, rp.l2b)
         self.logger.info('[Init] Building leg 2')
         Leg2 = Leg(C2)
         #print(f'Leg2.2:{[round(math.degrees(x), 2) for x in [Leg2.tetta, Leg2.alpha, Leg2.beta, Leg2.gamma]]}')
 
-        C3 = calculate_C_point(rp.legs[3])
+        C3 = calculate_C_point(rp.l3t, rp.l3a, rp.l3b)
         self.logger.info('[Init] Building leg 3')
         Leg3 = Leg(C3)
 
-        C4 = calculate_C_point(rp.legs[4])
+        C4 = calculate_C_point(rp.l4t, rp.l4a, rp.l4b)
         self.logger.info('[Init] Building leg 4')
         Leg4 = Leg(C4)
 
-        C5 = calculate_C_point(rp.legs[5])
+        C5 = calculate_C_point(rp.l5t, rp.l5a, rp.l5b)
         self.logger.info('[Init] Building leg 5')
         Leg5 = Leg(C5)
 
-        C6 = calculate_C_point(rp.legs[6])
+        C6 = calculate_C_point(rp.l6t, rp.l6a, rp.l6b)
         self.logger.info('[Init] Building leg 6')
         Leg6 = Leg(C6)
 
@@ -273,10 +273,32 @@ class Kinematics:
         y_offset = abs(round((self.legs[1].C.y - self.legs[6].C.y)/2))
         return {"x": x_offset, "y": y_offset}
     
+    def reposition_legs(self, delta_x, delta_y):
+        self.logger.info(f'reposition_legs ({delta_x}, {delta_y})')
+        if delta_x == delta_y == 0:
+            return None
+
+        self.legs[2].move_end_point(delta_x, -delta_y, self.leg_up)
+        self.legs[4].move_end_point(-delta_x, delta_y, self.leg_up)
+        self.add_angles_snapshot('endpoints')
+
+        self.legs[2].move_end_point(0, 0, -self.leg_up)
+        self.legs[4].move_end_point(0, 0, -self.leg_up)
+        self.add_angles_snapshot('endpoints')
+
+        self.legs[1].move_end_point(delta_x, delta_y, self.leg_up)
+        self.legs[3].move_end_point(-delta_x, -delta_y, self.leg_up)
+        self.add_angles_snapshot('endpoints')
+
+        self.legs[1].move_end_point(0, 0, -self.leg_up)
+        self.legs[3].move_end_point(0, 0, -self.leg_up)
+        self.add_angles_snapshot('endpoints')
+
     def switch_mode(self, mode: str):
         self.logger.info(f'Switching mode to {mode}')
         self.reset()
-        required_xy = cfg.modes[mode]
+        # WTF:
+        required_xy = {"x": 10, "y": 10}#cfg.modes.__getattribute__()
         current_xy = self.legs_D_offsets()
 
         print(f'Current_xy: {current_xy}. Required: {required_xy}')
@@ -354,5 +376,5 @@ class Kinematics:
     
 if __name__ == '__main__':
     rk = Kinematics()
-    rk.body_movement(0, 0, -5)
-    #print(rk.sequence[-1].angles_snapshot)
+    #rk.body_movement(0, 0, -5)
+    print(rk.sequence[-1].angles_snapshot)

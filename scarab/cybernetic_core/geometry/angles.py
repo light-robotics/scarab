@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 
 from cybernetic_core.geometry.lines import Point
 
-from configs.config import leg
+from configs.config import leg, servos_mapping
 import configs.code_config as code_config
 import logging.config
 
@@ -54,16 +54,16 @@ class RobotPosition():
         #self.legs = {
         #    1: leg1, 2: leg2, 3: leg3, 4: leg4, 5: leg5, 6: leg6,
         #}
-
-    def __sub__(self, cmp):
-        return 0
     
     @property
     def servo_values(self):
-        return self.__dict__.items()
+        return self.__dict__
 
     def __hash__(self):
-        return hash(self.__dict__.values())
+        return hash(self.servo_values.values())
+
+    def __repr__(self):
+        return self.__dict__.__repr__()
 
     #def __repr__(self):
     #    return f'\n1: {self.legs[1]}\n2: {self.legs[2]}\n3: {self.legs[3]}\n4: {self.legs[4]}\n5: {self.legs[5]}\n6: {self.legs[6]}\n'
@@ -146,117 +146,75 @@ def convert_alpha_to_kinematic(alpha_deg: float) -> float:
     return round(math.radians(alpha_deg), 4)
 
 def convert_beta(beta: float) -> float:
-    return -round(math.degrees(beta) + 90, 2)
+    return round(math.degrees(beta) - 90, 2)
 
 def convert_beta_to_kinematic(beta_deg: float) -> float:
-    return round(math.radians(-beta_deg - 90), 4)
+    return round(math.radians(beta_deg + 90), 4)
 
 def convert_tetta(tetta: float, leg_number: int) -> float:
     # virtual model to real servos
     tetta_degrees = math.degrees(tetta)
-    
-    if leg_number == 1:
-        tetta_degrees -= 45
-    elif leg_number == 2:
-        tetta_degrees += 45
+    leg_number = int(leg_number)
+    if leg_number == 2:
+        tetta_degrees -= 90
     elif leg_number == 3:
-        tetta_degrees += 135
+        tetta_degrees -= 180
     elif leg_number == 4:
-        tetta_degrees -= 135
-    
+        tetta_degrees += 180
+    elif leg_number == 5:
+        tetta_degrees += 90
+            
     return round(tetta_degrees, 2)
 
 def convert_tetta_to_kinematic(tetta_deg: float, leg_number: int) -> float:
     # real servos to virtual model
-    if leg_number == 1:
-        tetta_deg += 45        
-    elif leg_number == 2:
-        tetta_deg -= 45
-    elif leg_number == 3:
-        tetta_deg -= 135
-    elif leg_number == 4:
-        tetta_deg += 135
+    if leg_number in [4, 5, 6]:
+        tetta_deg -= 180
     
     tetta_radians = math.radians(tetta_deg)
     
     return round(tetta_radians, 4)
-    
-def convert_legs_angles_C(fp_in: RobotPosition, logger=None) -> RobotPosition:
-    # input: 16 angles in RADIANS
-    # output: 16 converted angles in DEGREES
-    # now tetta, alpha, beta one leg after another
-    #print(f'Before conversion: {fp_in}')
-    fp = RobotPosition(
-        leg1_alpha=convert_alpha(fp_in.legs[1].alpha),
-        leg1_beta=convert_beta(fp_in.legs[1].beta),
-        leg1_tetta=convert_tetta(fp_in.legs[1].tetta, 1),
 
-        leg2_alpha=convert_alpha(fp_in.legs[2].alpha),
-        leg2_beta=convert_beta(fp_in.legs[2].beta),
-        leg2_tetta=convert_tetta(fp_in.legs[2].tetta, 2),
+def get_converter_function(joint: str, back=False):
+    if 'a' in joint:
+        if back:
+            return convert_alpha_to_kinematic
+        else:
+            return convert_alpha
+    if 'b' in joint:
+        if back:
+            return convert_beta_to_kinematic
+        else:
+            return convert_beta
+    if 't' in joint:
+        if back:
+            return convert_tetta_to_kinematic
+        else:
+            return convert_tetta
 
-        leg3_alpha=convert_alpha(fp_in.legs[3].alpha),
-        leg3_beta=convert_beta(fp_in.legs[3].beta),
-        leg3_tetta=convert_tetta(fp_in.legs[3].tetta, 3),
+def convert_legs_angles_C(rp_in: RobotPosition, logger=None) -> RobotPosition:
+    angles = {}
+    for joint, servo_value in rp_in.servo_values.items():
+        converter_func = get_converter_function(joint)
+        if 't' in joint:
+            leg_num = joint[1]
+            angles[joint] = converter_func(servo_value, leg_num)
+        else:
+            angles[joint] = converter_func(servo_value)
 
-        leg4_alpha=convert_alpha(fp_in.legs[4].alpha),
-        leg4_beta=convert_beta(fp_in.legs[4].beta),
-        leg4_tetta=convert_tetta(fp_in.legs[4].tetta, 4),
+    return RobotPosition(**angles)
 
-        leg5_alpha=convert_alpha(fp_in.legs[5].alpha),
-        leg5_beta=convert_beta(fp_in.legs[5].beta),
-        leg5_tetta=convert_tetta(fp_in.legs[5].tetta, 4),
+def convert_legs_angles_to_kinematic_C(rp_in: RobotPosition, logger=None) -> RobotPosition:
+    angles = {}
+    for joint, servo_value in rp_in.servo_values.items():
+        converter_func = get_converter_function(joint, back=True)
+        if 't' in joint:
+            leg_num = joint[1]
+            angles[joint] = converter_func(servo_value, leg_num)
+        else:
+            angles[joint] = converter_func(servo_value)
 
-        leg6_alpha=convert_alpha(fp_in.legs[6].alpha),
-        leg6_beta=convert_beta(fp_in.legs[6].beta),
-        leg6_tetta=convert_tetta(fp_in.legs[6].tetta, 4),
-    )    
-    #print(f'Converted: {fp}')
-
-    """
-    if not tettas_correct([
-        fp.legs[1].tetta, 
-        fp.legs[2].tetta, 
-        fp.legs[3].tetta, 
-        fp.legs[4].tetta
-        ], 
-        logger=logger):
-        raise AnglesException('Bad tettas')
-    """
-    return fp
-
-def convert_legs_angles_to_kinematic_C(fp_in: RobotPosition, logger=None) -> RobotPosition:
-    # input: 16 angles in DEGREES
-    # output: 16 converted angles in RADIANS
-    # now tetta, alpha, beta one leg after another
-    #print(f'convert_legs_angles_to_kinematic. Before {legs_angles}')
-    fp = RobotPosition(
-        leg1_alpha=convert_alpha_to_kinematic(fp_in.legs[1].alpha),
-        leg1_beta=convert_beta_to_kinematic(fp_in.legs[1].beta),
-        leg1_tetta=convert_tetta_to_kinematic(fp_in.legs[1].tetta, 1),
-
-        leg2_alpha=convert_alpha_to_kinematic(fp_in.legs[2].alpha),
-        leg2_beta=convert_beta_to_kinematic(fp_in.legs[2].beta),
-        leg2_tetta=convert_tetta_to_kinematic(fp_in.legs[2].tetta, 2),
-
-        leg3_alpha=convert_alpha_to_kinematic(fp_in.legs[3].alpha),
-        leg3_beta=convert_beta_to_kinematic(fp_in.legs[3].beta),
-        leg3_tetta=convert_tetta_to_kinematic(fp_in.legs[3].tetta, 3),
-
-        leg4_alpha=convert_alpha_to_kinematic(fp_in.legs[4].alpha),
-        leg4_beta=convert_beta_to_kinematic(fp_in.legs[4].beta),
-        leg4_tetta=convert_tetta_to_kinematic(fp_in.legs[4].tetta, 4),
-
-        leg5_alpha=convert_alpha_to_kinematic(fp_in.legs[5].alpha),
-        leg5_beta=convert_beta_to_kinematic(fp_in.legs[5].beta),
-        leg5_tetta=convert_tetta_to_kinematic(fp_in.legs[5].tetta, 4),
-
-        leg6_alpha=convert_alpha_to_kinematic(fp_in.legs[6].alpha),
-        leg6_beta=convert_beta_to_kinematic(fp_in.legs[6].beta),
-        leg6_tetta=convert_tetta_to_kinematic(fp_in.legs[6].tetta, 4)
-    )
-
-    return fp
+    return RobotPosition(**angles)
 
 # ----------------------
 # moves for Fenix
