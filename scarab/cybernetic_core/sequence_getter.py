@@ -144,8 +144,9 @@ def get_sequence_for_command_cached(command: str, robot_position: RobotPosition,
     elif command == 'diagonal_backward_left':
         fk.move_2_legs_phased_13(-FORWARD_LEGS_2LEG_CM, FORWARD_LEGS_2LEG_CM)
         fk.move_2_legs_phased_24(-FORWARD_LEGS_2LEG_CM, FORWARD_LEGS_2LEG_CM)
-    elif command == 'forward_one_legged':
-        fk.move_body_straight(FORWARD_LEGS_1LEG_CM, 0)
+    elif command == 'wave_gait':
+        #fk.move_body_straight(FORWARD_LEGS_1LEG_CM, 0)
+        fk.wave_gait()
     #elif command == 'touching':
     #    fk.leg_move_with_touching()
     elif command in ['battle_mode', 'sentry_mode', 'walking_mode', 'run_mode']:
@@ -239,10 +240,8 @@ def get_sequence_for_command_cached(command: str, robot_position: RobotPosition,
         fk.end()
     elif command == 'reset':
         fk.reset()
-    elif command == 'hit_1':
-        fk.hit(1)
-    elif command == 'hit_2':
-        fk.play(2)
+    elif command == 'hit':
+        fk.hit()
     elif command == 'climb_2_legs':
         fk.climb_2_legs(10)
     elif command == 'descend_2_legs':

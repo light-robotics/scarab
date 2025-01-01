@@ -70,7 +70,7 @@ class moves:
     up_or_down_cm = 2
     move_body_cm = 2
     forward_body_1_leg_cm = 5
-    forward_body_2_leg_cm = 8
+    forward_body_2_leg_cm = 5
     reposition_cm = 1
 
 @dataclass
@@ -79,5 +79,7 @@ class xy:
     y: int
 
 class modes:
-    run_mode = xy(10, 10)
-    walk_mode = xy(10, 10)
+    run_mode = xy(11, 11)
+    walking_mode = xy(10, 10)
+    sentry_mode = xy(9, 9)
+    battle_mode = xy(10, 10)

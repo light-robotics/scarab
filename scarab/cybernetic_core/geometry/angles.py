@@ -120,9 +120,9 @@ def calculate_leg_angles(C: Point, logger):
 
     l = round(math.sqrt(C.x ** 2 + C.y ** 2), 2)
     delta_z = round(C.z, 2)
-    #logger.info(f'Trying l {l} and delta_z {delta_z}')
+    print(f'Trying l {l} and delta_z {delta_z}')
     alpha, beta = find_angles(l, delta_z, logger)
-    #logger.info(f'Success : {math.degrees(alpha)}, {math.degrees(beta)}')
+    print(f'Success : {[math.degrees(tetta), math.degrees(alpha), math.degrees(beta)]}')
 
     return tetta, alpha, beta
 
@@ -155,19 +155,24 @@ def convert_tetta(tetta: float, leg_number: int) -> float:
     # virtual model to real servos
     tetta_degrees = math.degrees(tetta)
     leg_number = int(leg_number)
-    if leg_number == 2:
-        tetta_degrees -= 90
+    if leg_number == 1:
+        tetta_degrees = 90 - tetta_degrees
+    elif leg_number == 6:
+        tetta_degrees = - (90 + tetta_degrees)
+    elif leg_number == 2:
+        tetta_degrees = 90 - tetta_degrees
     elif leg_number == 3:
-        tetta_degrees -= 180
+        tetta_degrees = 90 - tetta_degrees
     elif leg_number == 4:
-        tetta_degrees += 180
+        tetta_degrees = - (tetta_degrees + 90)
     elif leg_number == 5:
-        tetta_degrees += 90
+        tetta_degrees = - (tetta_degrees + 90)
             
     return round(tetta_degrees, 2)
 
 def convert_tetta_to_kinematic(tetta_deg: float, leg_number: int) -> float:
     # real servos to virtual model
+    # WTF!
     if leg_number in [4, 5, 6]:
         tetta_deg -= 180
     
