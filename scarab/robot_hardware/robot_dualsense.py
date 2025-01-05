@@ -169,7 +169,7 @@ class RobotDualSense(DualSense):
         elif self.mode == FenixModes.WALKING:
             self.command_writer.write_command('wave_gait', 500)
         elif self.mode == FenixModes.BATTLE:
-            self.command_writer.write_command('hit', 500)
+            self.command_writer.write_command('hit', cfg.speed.hit)
         
     def on_L3_up(self, value):
         self.left_y = value
@@ -182,7 +182,7 @@ class RobotDualSense(DualSense):
         #elif self.mode == FenixModes.SENTRY:
         #    self.command_writer.write_command('body_forward', 1000)
         elif self.mode == FenixModes.BATTLE:
-            self.command_writer.write_command('hit_2', cfg.speed.walk)
+            self.command_writer.write_command('hit_2', cfg.speed.hit)
     
     def on_L3_down(self, value):
         self.left_y = value

@@ -120,9 +120,9 @@ def calculate_leg_angles(C: Point, logger):
 
     l = round(math.sqrt(C.x ** 2 + C.y ** 2), 2)
     delta_z = round(C.z, 2)
-    print(f'Trying l {l} and delta_z {delta_z}')
+    #print(f'Trying l {l} and delta_z {delta_z}')
     alpha, beta = find_angles(l, delta_z, logger)
-    print(f'Success : {[math.degrees(tetta), math.degrees(alpha), math.degrees(beta)]}')
+    #print(f'Success : {[math.degrees(tetta), math.degrees(alpha), math.degrees(beta)]}')
 
     return tetta, alpha, beta
 

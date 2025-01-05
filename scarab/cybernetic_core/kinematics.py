@@ -428,21 +428,24 @@ class Kinematics:
             self.body_movement(1.5, 0, 0)
     
     def hit(self):
-        self.body_movement(-4, 0, 0)
+        self.body_movement(-7, 0, 0)
         for leg in [self.legs[1], self.legs[6]]:
-            leg.move_end_point(0, 0, 3 + cfg.robot.leg_up)
+            leg.move_end_point(0, 0, 7 + cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
 
         self.legs[1].move_end_point(0, -10, 0)
         self.legs[6].move_end_point(0, 10, 0)
         self.add_angles_snapshot('endpoints')
 
-        self.legs[1].move_end_point(15, 0, 0)
-        self.legs[6].move_end_point(15, 0, 0)
+        forward_move = 12
+        self.legs[1].move_end_point(forward_move, 0, 0)
         self.add_angles_snapshot('endpoints')
 
-        self.legs[1].move_end_point(-15, 0, 0)
-        self.legs[6].move_end_point(-15, 0, 0)
+        self.legs[1].move_end_point(-forward_move, 0, 0)
+        self.legs[6].move_end_point(forward_move, 0, 0)
+        self.add_angles_snapshot('endpoints')
+
+        self.legs[6].move_end_point(-forward_move, 0, 0)
         self.add_angles_snapshot('endpoints')
 
         self.legs[1].move_end_point(0, 10, 0)
@@ -450,9 +453,9 @@ class Kinematics:
         self.add_angles_snapshot('endpoints')
 
         for leg in [self.legs[1], self.legs[6]]:
-            leg.move_end_point(0, 0, -3 - cfg.robot.leg_up)
+            leg.move_end_point(0, 0, -7 - cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
-        self.body_movement(4, 0, 0)
+        self.body_movement(7, 0, 0)
     
     """
     def hit(self):

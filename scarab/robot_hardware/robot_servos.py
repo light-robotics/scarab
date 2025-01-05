@@ -71,8 +71,8 @@ class RobotServos:
         for joint, servo_value in rp.servo_values.items():
             servo_num = config.servos_mapping[joint]
             sc = self.servo_controller(servo_num)
-            if servo_num == 2:
-                continue
+            #if servo_num == 2:
+            #    continue
             sc.move_servo_to_angle(servo_num, servo_value, rate)
 
     def set_servo_values_paced(self, angles):

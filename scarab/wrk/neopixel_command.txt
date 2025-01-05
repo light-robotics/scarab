@@ -1,1 +1,1 @@
-steady,red,255
+111010,white,255
