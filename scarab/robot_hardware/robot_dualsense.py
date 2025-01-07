@@ -162,14 +162,16 @@ class RobotDualSense(DualSense):
             return
         
         #print(f'on_left_trigger_change ({joystick.x, joystick.y})')
-        if self.mode in [FenixModes.RUN, FenixModes.SENTRY]:
+        if self.mode == FenixModes.RUN:
             #self.command_writer.write_command('forward_two_legged', cfg.speed.run)
             self.left_x, self.left_y = x, y
             self.write_multi_command()
         elif self.mode == FenixModes.WALKING:
-            self.command_writer.write_command('wave_gait', 500)
+            self.command_writer.write_command('wave_gait', cfg.speed.wave_gait)
         elif self.mode == FenixModes.BATTLE:
             self.command_writer.write_command('hit', cfg.speed.hit)
+        elif self.mode == FenixModes.SENTRY:
+            self.command_writer.write_command('ripple_gait', cfg.speed.ripple_gait)
         
     def on_L3_up(self, value):
         self.left_y = value

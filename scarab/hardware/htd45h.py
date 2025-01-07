@@ -630,8 +630,9 @@ if __name__ == '__main__':
         m4.read_values(i)
         time.sleep(0.0002)
 
-    #test_servo = 9
-    #m4.move_servo_to_angle(test_servo, 20, 3000)
+    #m3.set_id(1, 8)
+    #test_servo = 8
+    #m3.move_servo_to_angle(test_servo, 0, 3000)
     #time.sleep(3)
-    #m4.disable_torque(test_servo)
+    #m3.disable_torque(test_servo)
     

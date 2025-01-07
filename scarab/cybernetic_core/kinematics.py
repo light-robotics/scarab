@@ -420,12 +420,44 @@ class Kinematics:
     """
 
     def wave_gait(self):
-        for leg_num, leg in self.legs.items():
-            leg.move_end_point(9, 0, cfg.robot.leg_up)
-            self.add_angles_snapshot('endpoints')
-            leg.move_end_point(0, 0, -cfg.robot.leg_up)
+        self.legs[1].move_end_point(9, 0, cfg.robot.leg_up)
+        self.add_angles_snapshot('endpoints')
+
+        for leg_num, legs_prev in zip([2, 3, 6, 5, 4], [1, 2, 3, 6, 5]):
+            self.legs[legs_prev].move_end_point(0, 0, -cfg.robot.leg_up)
+            self.legs[leg_num].move_end_point(9, 0, cfg.robot.leg_up)
+            #self.add_angles_snapshot('endpoints')
+            #leg.move_end_point(0, 0, -cfg.robot.leg_up)
             #self.add_angles_snapshot('endpoints')
             self.body_movement(1.5, 0, 0)
+        self.legs[4].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.body_movement(1.5, 0, 0)
+    
+    def ripple_gait(self):
+        self.legs[1].move_end_point(9, 0, cfg.robot.leg_up)
+        self.legs[4].move_end_point(9, 0, cfg.robot.leg_up)
+        self.body_movement(1.5, 0, 0, False)
+        self.add_angles_snapshot('endpoint')
+
+        self.legs[1].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.legs[4].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.legs[2].move_end_point(9, 0, cfg.robot.leg_up)
+        self.legs[6].move_end_point(9, 0, cfg.robot.leg_up)
+        self.body_movement(3, 0, 0, False)
+        self.add_angles_snapshot('endpoint')
+
+        self.legs[2].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.legs[6].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.legs[3].move_end_point(9, 0, cfg.robot.leg_up)
+        self.legs[5].move_end_point(9, 0, cfg.robot.leg_up)
+        self.body_movement(3, 0, 0, False)
+        self.add_angles_snapshot('endpoint')
+
+        self.legs[3].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.legs[5].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.body_movement(1.5, 0, 0, False)
+        self.add_angles_snapshot('endpoint')
+
     
     def hit(self):
         self.body_movement(-7, 0, 0)

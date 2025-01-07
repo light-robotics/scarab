@@ -13,18 +13,20 @@ class robot:
     x_offset = 0
     y_offset = 0
 
-    leg_up = 7
+    leg_up = 8
 
     diff_from_target_limit = 3.5
     diff_from_prev_limit = 0.5
 
 class movement:
-    command_advance_ms = -0.05
+    command_advance_ms = 0.05
 
 class speed:
-    run = 350
+    run = 300
     walk = 500
     hit = 250
+    ripple_gait = 500
+    wave_gait = 350
 
 @dataclass
 class limit:
@@ -71,7 +73,7 @@ class moves:
     up_or_down_cm = 2
     move_body_cm = 2
     forward_body_1_leg_cm = 5
-    forward_body_2_leg_cm = 4
+    forward_body_2_leg_cm = 6
     reposition_cm = 1
 
 @dataclass
@@ -80,7 +82,7 @@ class xy:
     y: int
 
 class modes:
-    run_mode = xy(13, 13)
-    walking_mode = xy(12, 12)
-    sentry_mode = xy(9, 9)
+    run_mode = xy(11, 11)
+    walking_mode = xy(11, 11)
+    sentry_mode = xy(11, 11)
     battle_mode = xy(11, 11)
