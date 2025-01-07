@@ -193,8 +193,8 @@ def get_sequence_for_command_cached(command: str, robot_position: RobotPosition,
         fk.body_movement(0, 0, 16)
     elif command == 'down_16':
         fk.body_movement(0, 0, -16)
-    elif command == 'kneel':
-        fk.kneel()
+    elif command == 'play1':
+        fk.play1()
     elif command == 'climb_2':
         fk.climb_20()
     elif command == 'backward_one_legged':

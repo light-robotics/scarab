@@ -425,8 +425,6 @@ class HTD45H:
         raise Exception('Can not read values from servo {0}'.format(id))
 
     def read_angle(self, id):
-        if id == 2:
-            return 0
         num_attempts = 5
         for i in range(num_attempts):
             angle = round((self.read_position(id) - neutral[id]) * 0.24 , 2)

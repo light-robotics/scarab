@@ -287,7 +287,7 @@ class RobotDualSense(DualSense):
         elif self.mode == FenixModes.WALKING:
             self.command_writer.write_command('touching', 2000)           
         elif self.mode == FenixModes.RUN:
-            self.command_writer.write_command('climb_2_legs', 500)
+            self.command_writer.write_command('play1', 500)
         elif self.mode in [FenixModes.SENTRY]:
            self.command_writer.write_command('tof_scan', 1000)
         time.sleep(0.5)

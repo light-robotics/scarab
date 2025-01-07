@@ -489,13 +489,30 @@ class Kinematics:
         self.add_angles_snapshot('endpoints')
         self.body_movement(7, 0, 0)
     
-    """
-    def hit(self):
-        self.legs[6].move_end_point(10, 0, 0)
+    def play1(self):
+        self.body_movement(0, 0, 5)
+        for leg in [self.legs[1], self.legs[2], self.legs[3]]:
+            leg.move_end_point(0, 0, 10)
+        for leg in [self.legs[4], self.legs[5], self.legs[6]]:
+            leg.move_end_point(0, 0, -10)
         self.add_angles_snapshot('endpoints')
-        self.legs[6].move_end_point(-10, 0, 0)
+        for leg in [self.legs[1], self.legs[2], self.legs[3]]:
+            leg.move_end_point(0, 0, -20)
+        for leg in [self.legs[4], self.legs[5], self.legs[6]]:
+            leg.move_end_point(0, 0, 20)
         self.add_angles_snapshot('endpoints')
-    """
+        for leg in [self.legs[1], self.legs[2], self.legs[3]]:
+            leg.move_end_point(0, 0, 10)
+        for leg in [self.legs[4], self.legs[5], self.legs[6]]:
+            leg.move_end_point(0, 0, -10)
+        self.add_angles_snapshot('endpoints')
+        
+        self.body_movement(7, 0, 0)
+        self.body_movement(0, 5, 0)
+        self.body_movement(-14, 0, 0)
+        self.body_movement(0, -10, 0)
+        self.body_movement(14, 0, 0)
+        self.body_movement(-7, 5, -5)
 
 if __name__ == '__main__':
     rk = Kinematics()

@@ -71,8 +71,6 @@ class RobotServos:
         for joint, servo_value in rp.servo_values.items():
             servo_num = config.servos_mapping[joint]
             sc = self.servo_controller(servo_num)
-            #if servo_num == 2:
-            #    continue
             sc.move_servo_to_angle(servo_num, servo_value, rate)
 
     def set_servo_values_paced(self, angles):
@@ -210,8 +208,23 @@ class RobotServos:
         self.send_command_to_servos(angles, rate)
         
         time.sleep(wait_time)
-        self.logger.info(f'[DIFF] Diff from target:')
+        self.logger.info(f'[Move end][DIFF] Diff from target:')
         self.get_angles_diff(angles)
+        """
+        # alerting stuck tetta
+        diff = {}
+        for k, v in self.get_current_angles().__dict__.items():
+            diff[k] = angles.__dict__[k] - v
+        
+        result = ''
+        for tetta in ['l1t', 'l2t', 'l3t', 'l4t', 'l5t', 'l6t']:
+            if abs(diff[tetta]) > 4:
+                result += '1'
+            else:
+                result += '0'
+        with open('/scarab/scarab/wrk/neopixel_command.txt', 'w') as f:
+            f.write(f'{result},white,255')
+        """
 
     def set_servo_values_not_paced_v2(self, fp: RobotPosition, prev_fp: RobotPosition = None):
         # every command is executed over a computed time, depending on the angle
@@ -240,6 +253,7 @@ class RobotServos:
         ):
             angles_diff.append(round(current - target, 2))
         max_angle_diff = max([abs(x) for x in angles_diff])
+                
         self.logger.info(f'[DIFF] Max : {max_angle_diff}. Avg : {sum([abs(x) for x in angles_diff])/16}. Sum : {sum([abs(x) for x in angles_diff])}')
         return angles_diff, max_angle_diff
 

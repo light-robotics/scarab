@@ -19,7 +19,7 @@ class robot:
     diff_from_prev_limit = 0.5
 
 class movement:
-    command_advance_ms = 0.05
+    command_advance_ms = 0 #0.05
 
 class speed:
     run = 300
