@@ -1,1 +1,1 @@
-011111,white,255
+shutdown,white,0

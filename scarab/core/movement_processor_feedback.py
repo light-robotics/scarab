@@ -105,9 +105,9 @@ class MovementProcessor:
                 self.rs.set_speed(1500)
             else:
                 #self.rs.set_speed(self.speed)
-                self.rs.set_speed(2000)
+                self.rs.set_speed(500)
                         
-            touch_speed = 3000
+            touch_speed = 500
             if next_angles.move_type == 'touch_1':
                 self.logger.info('[MP] Using function set_servo_values_touching_1')
                 move_function = self.rs.set_servo_values_touching_1

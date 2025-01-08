@@ -195,7 +195,7 @@ def convert_legs_angles_C(rp_in: RobotPosition, logger=None) -> RobotPosition:
     for joint, servo_value in rp_in.servo_values.items():
         converter_func = get_converter_function(joint)
         if 't' in joint:
-            leg_num = joint[1]
+            leg_num = int(joint[1])
             angles[joint] = converter_func(servo_value, leg_num)
         else:
             angles[joint] = converter_func(servo_value)
@@ -204,14 +204,15 @@ def convert_legs_angles_C(rp_in: RobotPosition, logger=None) -> RobotPosition:
 
 def convert_legs_angles_to_kinematic_C(rp_in: RobotPosition, logger=None) -> RobotPosition:
     angles = {}
+    print(rp_in)
     for joint, servo_value in rp_in.servo_values.items():
         converter_func = get_converter_function(joint, back=True)
         if 't' in joint:
-            leg_num = joint[1]
+            leg_num = int(joint[1])
             angles[joint] = converter_func(servo_value, leg_num)
         else:
             angles[joint] = converter_func(servo_value)
-
+    print(angles)
     return RobotPosition(**angles)
 
 # ----------------------
