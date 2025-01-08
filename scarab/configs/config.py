@@ -13,7 +13,7 @@ class robot:
     x_offset = 0
     y_offset = 0
 
-    leg_up = 8
+    leg_up = 9
 
     diff_from_target_limit = 3.5
     diff_from_prev_limit = 0.5
@@ -36,7 +36,7 @@ class limit:
 class angles_limits:
     alpha = limit(-70, 90)
     beta = limit(-145, 0)
-    gamma = limit(-110, 110)
+    tetta = limit(-60, 60)
 
 servos_mapping = {
     "l1t" : 11,
@@ -72,7 +72,7 @@ servos_boards = {
 class moves:
     up_or_down_cm = 2
     move_body_cm = 2
-    forward_body_1_leg_cm = 5
+    forward_body_1_leg_cm = 0
     forward_body_2_leg_cm = 6
     reposition_cm = 1
 

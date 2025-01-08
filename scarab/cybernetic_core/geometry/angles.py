@@ -155,28 +155,21 @@ def convert_tetta(tetta: float, leg_number: int) -> float:
     # virtual model to real servos
     tetta_degrees = math.degrees(tetta)
     leg_number = int(leg_number)
-    if leg_number == 1:
+    if leg_number in [1, 2, 3]:
         tetta_degrees = 90 - tetta_degrees
-    elif leg_number == 6:
+    elif leg_number in [4, 5, 6]:
         tetta_degrees = - (90 + tetta_degrees)
-    elif leg_number == 2:
-        tetta_degrees = 90 - tetta_degrees
-    elif leg_number == 3:
-        tetta_degrees = 90 - tetta_degrees
-    elif leg_number == 4:
-        tetta_degrees = - (tetta_degrees + 90)
-    elif leg_number == 5:
-        tetta_degrees = - (tetta_degrees + 90)
             
     return round(tetta_degrees, 2)
 
-def convert_tetta_to_kinematic(tetta_deg: float, leg_number: int) -> float:
+def convert_tetta_to_kinematic(tetta_degrees: float, leg_number: int) -> float:
     # real servos to virtual model
-    # WTF!
-    if leg_number in [4, 5, 6]:
-        tetta_deg -= 180
+    if leg_number in [1, 2, 3]:
+        tetta_degrees = 90 - tetta_degrees
+    elif leg_number in [4, 5, 6]:
+        tetta_degrees = - (90 + tetta_degrees)
     
-    tetta_radians = math.radians(tetta_deg)
+    tetta_radians = math.radians(tetta_degrees)
     
     return round(tetta_radians, 4)
 

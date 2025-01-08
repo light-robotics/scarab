@@ -84,6 +84,7 @@ class Leg:
         # tetta is corrected via convert_tetta function
         #print(self.O, self.D)
         self.tetta, self.alpha, self.beta = calculate_leg_angles(self.C, self.logger)
+        self.logger.info(f'Leg angles: {math.degrees(self.tetta), math.degrees(self.alpha), math.degrees(self.beta)}')
 
     def move_mount_point(self, delta_x, delta_y, delta_z):
         self.C.move(-delta_x, -delta_y, -delta_z)
@@ -513,6 +514,48 @@ class Kinematics:
         self.body_movement(0, -10, 0)
         self.body_movement(14, 0, 0)
         self.body_movement(-7, 5, -5)
+    
+    # feedback moves
+    def leg_move_custom(self, leg_num, mode, leg_delta=[0, 0, 0], add_snapshot=True):
+        if mode == 'touch':
+            iterations = 2
+            mode = f'touch_{leg_num}'
+        else:
+            iterations = 1
+        for i in range(iterations):
+            self.move_leg_endpoint(
+                leg_num, 
+                [
+                    round(leg_delta[0]/iterations, 1), 
+                    round(leg_delta[1]/iterations, 1),
+                    round(leg_delta[2]/iterations, 1)
+                ], 
+                mode,
+                add_snapshot=add_snapshot
+            )
+    
+    def move_leg_endpoint_abs(self, leg_num, leg_delta, snapshot_type='endpoint', add_snapshot=True):
+        min_z = min([leg.C.z for leg in self.legs.values()])
+        leg = self.legs[leg_num]
+        target_x = leg_delta[0]
+        if leg_delta[0] is None:
+            target_x = leg.C.x
+        
+        target_y = leg_delta[1]
+        if leg_delta[1] is None:
+            target_y = leg.C.y
+
+        target_z = leg_delta[2]
+        if leg_delta[2] is None:
+            target_z = leg.__class__.z - min_z
+
+        new_delta = [round(target_x - leg.C.x, 1), round(target_y - leg.C.y, 1), round(target_z - leg.C.z + min_z, 1)]
+        print(f'Legnum: {leg_num}.\nOriginal delta: {leg_delta}\nNew delta: {new_delta}')
+        self.logger.info(f'move_leg_endpoint_abs. Legnum: {leg_num}.\nOriginal delta: {leg_delta}\nNew delta: {new_delta}')
+        self.legs[leg_num].move_end_point(*new_delta)
+        #self.legs_deltas[leg_num] = [x + y for x, y in zip(self.legs_deltas[leg_num], leg_delta)]        
+        if add_snapshot:
+            self.add_angles_snapshot(snapshot_type)
 
 if __name__ == '__main__':
     rk = Kinematics()

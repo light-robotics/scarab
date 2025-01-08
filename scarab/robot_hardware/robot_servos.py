@@ -71,6 +71,8 @@ class RobotServos:
         for joint, servo_value in rp.servo_values.items():
             servo_num = config.servos_mapping[joint]
             sc = self.servo_controller(servo_num)
+            if 't' in joint:
+                assert config.angles_limits.tetta.min <= servo_value <= config.angles_limits.tetta.max
             sc.move_servo_to_angle(servo_num, servo_value, rate)
 
     def set_servo_values_paced(self, angles):
@@ -257,6 +259,49 @@ class RobotServos:
         self.logger.info(f'[DIFF] Max : {max_angle_diff}. Avg : {sum([abs(x) for x in angles_diff])/16}. Sum : {sum([abs(x) for x in angles_diff])}')
         return angles_diff, max_angle_diff
 
+    # feedback moves
+    
+    def set_servo_values_touching_1(self, angles):
+        return self.set_servo_values_touching(angles, 1)
+
+    def set_servo_values_touching_2(self, angles):
+        return self.set_servo_values_touching(angles, 2)
+    
+    def set_servo_values_touching_3(self, angles):
+        return self.set_servo_values_touching(angles, 3)
+    
+    def set_servo_values_touching_4(self, angles):
+        return self.set_servo_values_touching(angles, 4)
+
+    def set_servo_values_touching_5(self, angles):
+        return self.set_servo_values_touching(angles, 5)
+    
+    def set_servo_values_touching_6(self, angles):
+        return self.set_servo_values_touching(angles, 6)
+
+    def set_servo_values_touching(self, angles, legnum):
+        _, max_angle_diff = self.get_angles_diff(angles)
+        rate = round(max(self.speed * max_angle_diff / 45, self.max_speed)) # speed is normalized
+        self.logger.info(f'max_angle_diff: {max_angle_diff}, self.speed : {self.speed}, self.speed * max_angle_diff / 45 : {self.speed * max_angle_diff / 45}')
+
+        self.send_command_to_servos(angles, rate)
+        self.logger.info(f'Command sent. Rate: {rate}, angles: {angles}')
+
+        for s in range(50):
+            self.logger.info(f'Step {s}')
+            
+            with open("/scarab/scarab/wrk/neopixel_command.txt", "r") as f:
+                legs_down = f.readline().split(',')[0]
+            self.logger.info(f"legs_down: {legs_down}")
+            if len(legs_down) == 6 and legs_down[legnum - 1] == '1':
+                current_angles = self.get_current_angles()
+                self.logger.info(f'current angles: {current_angles}')
+                print(f'{legnum} down. Exiting')
+                self.send_command_to_servos(current_angles, 0)
+                return current_angles
+
+            time.sleep(0.03)
+        return self.get_current_angles()
 
 if __name__ == '__main__':
     scarab = RobotServos()
