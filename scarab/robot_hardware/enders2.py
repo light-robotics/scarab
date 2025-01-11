@@ -65,8 +65,8 @@ def button_changed_middle_right(button):
 class FenixEnders():
     FRONT_LEFT = 24
     FRONT_RIGHT = 23
-    MIDDLE_LEFT = 20
-    MIDDLE_RIGHT = 26
+    MIDDLE_LEFT = 26
+    MIDDLE_RIGHT = 20
     BACK_RIGHT = 27
     BACK_LEFT = 22
     

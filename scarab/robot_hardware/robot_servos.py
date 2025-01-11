@@ -260,43 +260,28 @@ class RobotServos:
         return angles_diff, max_angle_diff
 
     # feedback moves
-    
-    def set_servo_values_touching_1(self, angles):
-        return self.set_servo_values_touching(angles, 1)
-
-    def set_servo_values_touching_2(self, angles):
-        return self.set_servo_values_touching(angles, 2)
-    
-    def set_servo_values_touching_3(self, angles):
-        return self.set_servo_values_touching(angles, 3)
-    
-    def set_servo_values_touching_4(self, angles):
-        return self.set_servo_values_touching(angles, 4)
-
-    def set_servo_values_touching_5(self, angles):
-        return self.set_servo_values_touching(angles, 5)
-    
-    def set_servo_values_touching_6(self, angles):
-        return self.set_servo_values_touching(angles, 6)
-
-    def set_servo_values_touching(self, angles, legnum):
+    def set_servo_values_touching(self, angles):
         _, max_angle_diff = self.get_angles_diff(angles)
         rate = round(max(self.speed * max_angle_diff / 45, self.max_speed)) # speed is normalized
         self.logger.info(f'max_angle_diff: {max_angle_diff}, self.speed : {self.speed}, self.speed * max_angle_diff / 45 : {self.speed * max_angle_diff / 45}')
+        with open(config.files.neopixel, "r") as f:
+            legs_down = f.readline().split(',')[0]
+        self.logger.info(f"legs_down: {legs_down}")
 
         self.send_command_to_servos(angles, rate)
         self.logger.info(f'Command sent. Rate: {rate}, angles: {angles}')
-
+        initial_legs_down = sum(int(x) for x in legs_down)
         for s in range(50):
             self.logger.info(f'Step {s}')
             
-            with open("/scarab/scarab/wrk/neopixel_command.txt", "r") as f:
+            with open(config.files.neopixel, "r") as f:
                 legs_down = f.readline().split(',')[0]
             self.logger.info(f"legs_down: {legs_down}")
-            if len(legs_down) == 6 and legs_down[legnum - 1] == '1':
+
+            current_legs_down = sum(int(x) for x in legs_down)
+            if len(legs_down) == 6 and current_legs_down > initial_legs_down:
                 current_angles = self.get_current_angles()
-                self.logger.info(f'current angles: {current_angles}')
-                print(f'{legnum} down. Exiting')
+                self.logger.info(f"Exiting")
                 self.send_command_to_servos(current_angles, 0)
                 return current_angles
 

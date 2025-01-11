@@ -115,6 +115,17 @@ class Kinematics:
         if init_snapshot:
             self.add_angles_snapshot('init')
     
+    def check_tettas(self):
+        pass
+
+    def move_leg_endpoint(self, legnum, delta_x, delta_y, delta_z):
+        self.legs[legnum].move_end_point(delta_x, delta_y, delta_z)
+        self.check_tettas()
+    
+    def move_leg_mountpoint(self, legnum, delta_x, delta_y, delta_z):
+        self.legs[legnum].move_mount_point(delta_x, delta_y, delta_z)
+        self.check_tettas()
+
     def reset_history(self):
         self.angles_history = []
 
@@ -381,7 +392,7 @@ class Kinematics:
         self.legs[leg_num].move_end_point(*leg_delta)
         if add_snapshot:
             self.add_angles_snapshot(snapshot_type)
-        print(f'move_leg_endpoint. Leg {leg_num}. C: {self.legs[leg_num].C}')
+        #print(f'move_leg_endpoint. Leg {leg_num}. C: {self.legs[leg_num].C}')
 
     """
     Two phased moves
@@ -518,8 +529,7 @@ class Kinematics:
     # feedback moves
     def leg_move_custom(self, leg_num, mode, leg_delta=[0, 0, 0], add_snapshot=True):
         if mode == 'touch':
-            iterations = 2
-            mode = f'touch_{leg_num}'
+            iterations = 3
         else:
             iterations = 1
         for i in range(iterations):
@@ -547,7 +557,7 @@ class Kinematics:
 
         target_z = leg_delta[2]
         if leg_delta[2] is None:
-            target_z = leg.__class__.z - min_z
+            target_z = leg.C.z - min_z
 
         new_delta = [round(target_x - leg.C.x, 1), round(target_y - leg.C.y, 1), round(target_z - leg.C.z + min_z, 1)]
         print(f'Legnum: {leg_num}.\nOriginal delta: {leg_delta}\nNew delta: {new_delta}')

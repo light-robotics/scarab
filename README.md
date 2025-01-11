@@ -10,3 +10,4 @@ To run scarab:
 Feedback versions:
 - python /scarab/scarab/core/movement_processor_feedback.py
 - python /scarab/scarab/robot_hardware/enders2.py
+- python /scarab/scarab/robot_hardware/read_mpu6050.py

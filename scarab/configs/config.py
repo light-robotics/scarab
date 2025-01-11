@@ -6,9 +6,12 @@ class leg:
     d = 0
 
 class robot:
-    horizontal_x = 10
-    horizontal_y = 10
+    horizontal_x = 9
+    horizontal_y = 9
     vertical = 10
+
+    touch_down = -6
+    touch_up = 24
 
     x_offset = 0
     y_offset = 0
@@ -17,6 +20,8 @@ class robot:
 
     diff_from_target_limit = 3.5
     diff_from_prev_limit = 0.5
+
+    balance_offset = 1.5
 
 class movement:
     command_advance_ms = 0 #0.05
@@ -36,7 +41,7 @@ class limit:
 class angles_limits:
     alpha = limit(-70, 90)
     beta = limit(-145, 0)
-    tetta = limit(-60, 60)
+    tetta = limit(-75, 75)
 
 servos_mapping = {
     "l1t" : 11,
@@ -72,7 +77,7 @@ servos_boards = {
 class moves:
     up_or_down_cm = 2
     move_body_cm = 2
-    forward_body_1_leg_cm = 0
+    forward_body_1_leg_cm = 9
     forward_body_2_leg_cm = 6
     reposition_cm = 1
 
@@ -83,6 +88,14 @@ class xy:
 
 class modes:
     run_mode = xy(11, 11)
-    walking_mode = xy(11, 11)
+    walking_mode = xy(10, 10)
     sentry_mode = xy(11, 11)
     battle_mode = xy(11, 11)
+
+class files:
+    movement = '/scarab/scarab/wrk/movement_command.txt'
+    neopixel = '/scarab/scarab/wrk/neopixel_command.txt'
+    gyroaccel = '/scarab/scarab/wrk/gyroaccel.txt'
+
+class gyroaccel:
+    readings = 10

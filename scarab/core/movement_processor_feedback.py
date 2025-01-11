@@ -94,12 +94,12 @@ class MovementProcessor:
                 self.run_sequence(command, kwargs)
 
     def get_and_move_to_angles(self, move):
-        print(f'Position before: {self.robot_position}')
+        #print(f'Position before: {self.robot_position}')
         sequence = get_angles_for_sequence(move, self.robot_position)
         print(f'Inner sequence: {len(sequence)}')
         for next_angles in sequence:
             angles_snapshot = next_angles.angles_snapshot
-            print(f'angles_snapshot: {angles_snapshot}')
+            #print(f'angles_snapshot: {angles_snapshot}')
 
             if next_angles.move_type == 'body':
                 self.rs.set_speed(1500)
@@ -108,29 +108,9 @@ class MovementProcessor:
                 self.rs.set_speed(500)
                         
             touch_speed = 500
-            if next_angles.move_type == 'touch_1':
-                self.logger.info('[MP] Using function set_servo_values_touching_1')
-                move_function = self.rs.set_servo_values_touching_1
-                self.rs.set_speed(touch_speed)
-            elif next_angles.move_type == 'touch_2':
-                self.logger.info('[MP] Using function set_servo_values_touching_2')
-                move_function = self.rs.set_servo_values_touching_2
-                self.rs.set_speed(touch_speed)
-            elif next_angles.move_type == 'touch_3':
-                self.logger.info('[MP] Using function set_servo_values_touching_3')
-                move_function = self.rs.set_servo_values_touching_3
-                self.rs.set_speed(touch_speed)
-            elif next_angles.move_type == 'touch_4':
-                self.logger.info('[MP] Using function set_servo_values_touching_4')
-                move_function = self.rs.set_servo_values_touching_4
-                self.rs.set_speed(touch_speed)
-            elif next_angles.move_type == 'touch_5':
-                self.logger.info('[MP] Using function set_servo_values_touching_5')
-                move_function = self.rs.set_servo_values_touching_5
-                self.rs.set_speed(touch_speed)
-            elif next_angles.move_type == 'touch_6':
-                self.logger.info('[MP] Using function set_servo_values_touching_6')
-                move_function = self.rs.set_servo_values_touching_6
+            if next_angles.move_type == 'touch':
+                self.logger.info('[MP] Using function set_servo_values_touching')
+                move_function = self.rs.set_servo_values_touching
                 self.rs.set_speed(touch_speed)
             else:
                 self.logger.info('[MP] Using function set_servo_values_paced_wo_feedback')
