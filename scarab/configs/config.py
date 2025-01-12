@@ -77,8 +77,8 @@ servos_boards = {
 class moves:
     up_or_down_cm = 2
     move_body_cm = 2
-    forward_body_1_leg_cm = 9
-    forward_body_2_leg_cm = 6
+    forward_body_1_leg_cm = 6
+    forward_body_2_leg_cm = 4
     reposition_cm = 1
 
 @dataclass
@@ -88,7 +88,7 @@ class xy:
 
 class modes:
     run_mode = xy(11, 11)
-    walking_mode = xy(10, 10)
+    walking_mode = xy(11, 11)
     sentry_mode = xy(11, 11)
     battle_mode = xy(11, 11)
 

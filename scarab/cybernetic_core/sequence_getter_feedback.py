@@ -42,6 +42,7 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
     elif command in ['forward_32', 'forward_22', 'forward_1', 'forward_2', 'forward_3']:
+        sequence.append(Move('body_movement', {'deltas': [0, 0, 4*UP_OR_DOWN_CM]}))
         delta_x = cfg.moves.forward_body_2_leg_cm
         sequence.append(Move('body_movement', {'deltas': [round(delta_x / 2, 1), 0, 0]}))
 
@@ -97,44 +98,48 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('touch', {}))
 
     elif command == 'wave_gait':
-        for leg in [1, 2, 3, 6, 5, 4]:
-            sequence.append(Move('body_movement', {'deltas': [cfg.moves.forward_body_1_leg_cm/6, 0, 0]}))
-            sequence.append(Move('endpoint_absolute', {'leg': leg, 'deltas': [None, None, -cfg.robot.touch_down]}))
+        #sequence.append(Move('body_movement', {'deltas': [cfg.moves.forward_body_1_leg_cm/2, 0, 0]}))
+        for leg in [1, 2, 3, 6, 5, 4]:            
+            sequence.append(Move('endpoint_absolute', {'leg': [leg], 'deltas': [None, None, cfg.robot.touch_up]}))
             #sequence.append(Move('endpoint', {'leg': leg, 'deltas': [FORWARD_LEGS_1LEG_CM, 0, 0]}))
             if leg == 1:
                 sequence.append(Move('endpoint_absolute', 
-                    {'leg': leg, 'deltas': 
-                        [cfg.modes.walking_mode.x + cfg.moves.forward_body_1_leg_cm - cfg.moves.forward_body_1_leg_cm/6, 
+                    {'leg': [1], 'deltas': 
+                        [cfg.modes.walking_mode.x + cfg.moves.forward_body_1_leg_cm, # - cfg.moves.forward_body_1_leg_cm/6, 
                          cfg.modes.walking_mode.y, None]}))
             elif leg == 2:
                 sequence.append(Move('endpoint_absolute', 
-                    {'leg': leg, 'deltas': [
-                        cfg.moves.forward_body_1_leg_cm - 2*cfg.moves.forward_body_1_leg_cm/6, 
+                    {'leg': [2], 'deltas': [
+                        cfg.moves.forward_body_1_leg_cm, # - 2*cfg.moves.forward_body_1_leg_cm/6, 
                         cfg.modes.walking_mode.y, None]}))
             elif leg == 3:
                 sequence.append(Move('endpoint_absolute', 
-                    {'leg': leg, 'deltas': [
-                        -cfg.modes.walking_mode.x + cfg.moves.forward_body_1_leg_cm - 3*cfg.moves.forward_body_1_leg_cm/6, 
+                    {'leg': [3], 'deltas': [
+                        -cfg.modes.walking_mode.x + cfg.moves.forward_body_1_leg_cm, # - 3*cfg.moves.forward_body_1_leg_cm/6, 
                         cfg.modes.walking_mode.y, None]}))
             elif leg == 6:
                 sequence.append(Move('endpoint_absolute', 
-                    {'leg': leg, 'deltas': [
-                        cfg.modes.walking_mode.x + cfg.moves.forward_body_1_leg_cm - 4*cfg.moves.forward_body_1_leg_cm/6, 
+                    {'leg': [6], 'deltas': [
+                        cfg.modes.walking_mode.x + cfg.moves.forward_body_1_leg_cm, # - 4*cfg.moves.forward_body_1_leg_cm/6, 
                         -cfg.modes.walking_mode.y, None]}))
             elif leg == 5:
                 sequence.append(Move('endpoint_absolute', 
-                    {'leg': leg, 'deltas': [
-                        cfg.moves.forward_body_1_leg_cm - 5*cfg.moves.forward_body_1_leg_cm/6, 
+                    {'leg': [5], 'deltas': [
+                        cfg.moves.forward_body_1_leg_cm, # - 5*cfg.moves.forward_body_1_leg_cm/6, 
                         -cfg.modes.walking_mode.y, None]}))
             elif leg == 4:
                 sequence.append(Move('endpoint_absolute', 
-                    {'leg': leg, 'deltas': [
-                        -cfg.modes.walking_mode.x + cfg.moves.forward_body_1_leg_cm - cfg.moves.forward_body_1_leg_cm, 
+                    {'leg': [4], 'deltas': [
+                        -cfg.modes.walking_mode.x + cfg.moves.forward_body_1_leg_cm, # - cfg.moves.forward_body_1_leg_cm, 
                         -cfg.modes.walking_mode.y, None]}))
                         
-            sequence.append(Move('touch', {'leg': leg}))
-            sequence.append(Move('endpoint', {'leg': leg, 'deltas': [0, 0, -3]}))
-            
+            sequence.append(Move('touch', {}))
+            sequence.append(Move('touch', {}))
+            sequence.append(Move('touch', {}))
+            sequence.append(Move('touch', {}))
+            sequence.append(Move('touch', {}))
+            sequence.append(Move('endpoint', {'leg': [leg], 'deltas': [0, 0, -3]}))
+        sequence.append(Move('body_movement', {'deltas': [cfg.moves.forward_body_1_leg_cm, 0, 0]}))
         
     elif command in ['battle_mode', 'sentry_mode', 'walking_mode', 'run_mode']:
         sequence.append(Move('switch_mode', {"mode": command}))

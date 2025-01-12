@@ -102,7 +102,7 @@ def find_angles(Cx, Cy, logger):
     a, b = leg.a, leg.b
     dist = math.sqrt(Cx ** 2 + Cy ** 2)
     if dist > a + b:
-        raise Exception('No decisions. Full distance : {0}'.format(dist))
+        raise DistanceException('No decisions. Full distance : {0}'.format(dist))
 
     alpha1 = math.acos((a ** 2 + dist ** 2 - b ** 2) / (2 * a * dist))
     beta1 = math.acos((a ** 2 + b ** 2 - dist ** 2) / (2 * a * b))
