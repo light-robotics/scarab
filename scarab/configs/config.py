@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 
 class leg:
-    a = 15
-    b = 15.5
+    a = 12
+    b = 14.5
     d = 0
 
 class robot:
-    horizontal_x = 9
-    horizontal_y = 9
+    horizontal_x = 10
+    horizontal_y = 10
     vertical = 10
 
     touch_down = -6
@@ -15,6 +15,7 @@ class robot:
 
     x_offset = 0
     y_offset = 0
+    middle_leg_offset = 5
 
     leg_up = 9
 
@@ -27,7 +28,7 @@ class movement:
     command_advance_ms = 0 #0.05
 
 class speed:
-    run = 300
+    run = 250
     walk = 500
     hit = 250
     ripple_gait = 500
@@ -41,7 +42,7 @@ class limit:
 class angles_limits:
     alpha = limit(-70, 90)
     beta = limit(-145, 0)
-    tetta = limit(-75, 75)
+    tetta = limit(-90, 90)
 
 servos_mapping = {
     "l1t" : 11,
@@ -87,10 +88,10 @@ class xy:
     y: int
 
 class modes:
-    run_mode = xy(11, 11)
-    walking_mode = xy(11, 11)
-    sentry_mode = xy(11, 11)
-    battle_mode = xy(11, 11)
+    run_mode = xy(9, 9)
+    walking_mode = xy(10, 10)
+    sentry_mode = xy(10, 10)
+    battle_mode = xy(10, 10)
 
 class files:
     movement = '/scarab/scarab/wrk/movement_command.txt'

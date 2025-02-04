@@ -217,7 +217,7 @@ class Kinematics:
         Leg1 = Leg(C1)
 
         C2 = Point(cfg.robot.x_offset,
-                   cfg.robot.horizontal_y - cfg.robot.y_offset,
+                   cfg.robot.horizontal_y - cfg.robot.y_offset + cfg.robot.middle_leg_offset,
                    -cfg.robot.vertical)
         self.logger.info('[Init] Initiating leg 2')
         Leg2 = Leg(C2)
@@ -235,7 +235,7 @@ class Kinematics:
         Leg4 = Leg(C4)
 
         C5 = Point(- cfg.robot.x_offset,
-                   -cfg.robot.horizontal_y - cfg.robot.y_offset,
+                   -cfg.robot.horizontal_y - cfg.robot.y_offset - cfg.robot.middle_leg_offset,
                    -cfg.robot.vertical)
         self.logger.info('[Init] Initiating leg 5')
         Leg5 = Leg(C5)
@@ -293,7 +293,7 @@ class Kinematics:
         target_y_1 = target_y - cfg.robot.y_offset
 
         target_x_2 = cfg.robot.x_offset
-        target_y_2 = target_y - cfg.robot.y_offset
+        target_y_2 = target_y - cfg.robot.y_offset + cfg.robot.middle_leg_offset
 
         target_x_3 = -target_x - cfg.robot.x_offset
         target_y_3 = target_y - cfg.robot.y_offset
@@ -302,7 +302,7 @@ class Kinematics:
         target_y_4 = -target_y - cfg.robot.y_offset
 
         target_x_5 = -cfg.robot.x_offset
-        target_y_5 = -target_y - cfg.robot.y_offset
+        target_y_5 = -target_y - cfg.robot.y_offset - cfg.robot.middle_leg_offset
 
         target_x_6 = target_x - cfg.robot.x_offset
         target_y_6 = -target_y - cfg.robot.y_offset
@@ -481,7 +481,7 @@ class Kinematics:
         self.legs[6].move_end_point(0, 10, 0)
         self.add_angles_snapshot('endpoints')
 
-        forward_move = 12
+        forward_move = 8
         self.legs[1].move_end_point(forward_move, 0, 0)
         self.add_angles_snapshot('endpoints')
 
