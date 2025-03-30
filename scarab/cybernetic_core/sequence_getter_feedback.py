@@ -51,26 +51,36 @@ def get_sequence_for_command(command: str, kwargs=None):
         delta_x = cfg.moves.forward_body_2_leg_cm
         sequence.append(Move('body_movement', {'deltas': [round(delta_x / 2, 1), 0, 0]}))
 
-        sequence.append(Move('endpoint_absolute', {'leg': [1, 3, 5], 'deltas': [None, None, cfg.robot.touch_up]}))
-
-        sequence.append(Move('endpoint_absolute', 
-                    {'leg': [1], 'deltas': 
-                        [cfg.modes.walking_mode.x + cfg.moves.forward_body_2_leg_cm/2, 
-                         cfg.modes.walking_mode.y, None]},
-                         False))
-        
-        sequence.append(Move('endpoint_absolute', 
-                    {'leg': [3], 'deltas': [
+        sequence.append(Move('endpoint_absolute', {
+                'leg': [1, 3, 5], 
+                'deltas': {
+                    1: [None, None, cfg.robot.touch_up],
+                    3: [None, None, cfg.robot.touch_up],
+                    5: [None, None, cfg.robot.touch_up]
+                }
+                }))
+    
+        sequence.append(Move('endpoint_absolute', {
+                'leg': [1, 3, 5], 
+                'deltas': {
+                    1: [
+                        cfg.modes.walking_mode.x + cfg.moves.forward_body_2_leg_cm/2, 
+                        cfg.modes.walking_mode.y, 
+                        None
+                    ],
+                    3: [
                         -cfg.modes.walking_mode.x + cfg.moves.forward_body_2_leg_cm/2, 
-                        cfg.modes.walking_mode.y, None]},
-                        False))
-        
-        sequence.append(Move('endpoint_absolute', 
-                    {'leg': [5], 'deltas': [
+                        cfg.modes.walking_mode.y, 
+                        None
+                    ],
+                    5: [
                         cfg.moves.forward_body_2_leg_cm/2, 
-                        -cfg.modes.walking_mode.y - cfg.robot.middle_leg_offset, None]},
-                        True))
-        
+                        -cfg.modes.walking_mode.y - cfg.robot.middle_leg_offset, 
+                        None
+                    ]
+                }
+                }))
+
         #sequence.append(Move('endpoint', {'leg': [1, 3, 5], 'deltas': [delta_x, 0, 0]}))
         
         sequence.append(Move('touch', {}))
@@ -87,25 +97,34 @@ def get_sequence_for_command(command: str, kwargs=None):
         
         sequence.append(Move('body_movement', {'deltas': [round(delta_x / 2, 1), 0, 0]}))
 
-        sequence.append(Move('endpoint_absolute', {'leg': [2, 4, 6], 'deltas': [None, None, cfg.robot.touch_up]}))
+        sequence.append(Move('endpoint_absolute', 
+                             {'leg': [2, 4, 6],
+                            'deltas': {
+                                2: [None, None, cfg.robot.touch_up],
+                                4: [None, None, cfg.robot.touch_up],
+                                6: [None, None, cfg.robot.touch_up]
+                            }
+                            }))
         
-        #sequence.append(Move('endpoint', {'leg': [2, 4, 6], 'deltas': [delta_x, 0, 0]}))
-        sequence.append(Move('endpoint_absolute', 
-                    {'leg': [2], 'deltas': [
-                        0, #cfg.moves.forward_body_2_leg_cm/2, 
-                        cfg.modes.walking_mode.y + cfg.robot.middle_leg_offset, None]},
-                        False))
-        sequence.append(Move('endpoint_absolute', 
-                    {'leg': [4], 'deltas': [
-                        -cfg.modes.walking_mode.x, # + cfg.moves.forward_body_2_leg_cm/2, 
-                        -cfg.modes.walking_mode.y, None]},
-                        False))
-        sequence.append(Move('endpoint_absolute', 
-                    {'leg': [6], 'deltas': [
-                        cfg.modes.walking_mode.x, # + cfg.moves.forward_body_2_leg_cm/2, 
-                        -cfg.modes.walking_mode.y, None]},
-                        True))
-        
+        sequence.append(Move('endpoint_absolute',
+                    {'leg': [2, 4, 6], 
+                     'deltas': { 
+                        2: [
+                             0, 
+                             cfg.modes.walking_mode.y + cfg.robot.middle_leg_offset, 
+                             None
+                        ],
+                        4: [
+                            -cfg.modes.walking_mode.x, 
+                            -cfg.modes.walking_mode.y, 
+                            None
+                        ],
+                        6: [
+                            cfg.modes.walking_mode.x, 
+                        -cfg.modes.walking_mode.y, None
+                        ]
+                     }
+                    }))        
         
         sequence.append(Move('touch', {}))
         sequence.append(Move('touch', {}))
@@ -186,8 +205,9 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
         rk.add_angles_snapshot('endpoint')
     elif move.move_type == 'endpoint_absolute':
         for leg in move.values['leg']:
-            rk.move_leg_endpoint_abs(leg, move.values['deltas'], add_snapshot=False)
-        rk.add_angles_snapshot('endpoint')
+            rk.move_leg_endpoint_abs(leg, move.values['deltas'][leg], add_snapshot=False)
+        if move.snapshot:
+            rk.add_angles_snapshot('endpoint')
     elif move.move_type == 'endpoints':
         rk.move_leg_endpoint(move.values['legs'][0], move.values['deltas'], add_snapshot=False)
         rk.move_leg_endpoint(move.values['legs'][1], move.values['deltas'])
