@@ -11,6 +11,7 @@ from cybernetic_core.sequence_getter_feedback import get_sequence_for_command, g
 from cybernetic_core.geometry.angles import AnglesException, DistanceException
 from core.utils.multiphase_moves import CommandsForwarder
 import configs.code_config as code_config
+import configs.config as cfg
 import logging.config
 
 from robot_hardware.robot_servos import RobotServos
@@ -100,18 +101,20 @@ class MovementProcessor:
         for next_angles in sequence:
             angles_snapshot = next_angles.angles_snapshot
             #print(f'angles_snapshot: {angles_snapshot}')
-
+            self.logger.info(f'[MP] Move type: {next_angles.move_type}')
             if next_angles.move_type == 'body':
-                self.rs.set_speed(1500)
+                self.rs.set_speed(cfg.speed.feedback_body)
             else:
                 #self.rs.set_speed(self.speed)
-                self.rs.set_speed(500)
-                        
-            touch_speed = 500
+                self.rs.set_speed(cfg.speed.feedback_legs)
+
+            if 'balance' in next_angles.move_type:
+                self.rs.set_speed(cfg.speed.balance)            
+            
             if next_angles.move_type == 'touch':
                 self.logger.info('[MP] Using function set_servo_values_touching')
                 move_function = self.rs.set_servo_values_touching
-                self.rs.set_speed(touch_speed)
+                self.rs.set_speed(cfg.speed.touch)
             else:
                 self.logger.info('[MP] Using function set_servo_values_paced_wo_feedback')
                 move_function = self.rs.set_servo_values_paced_wo_feedback

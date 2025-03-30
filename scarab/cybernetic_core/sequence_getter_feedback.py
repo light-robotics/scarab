@@ -21,9 +21,10 @@ REPOSITION_CM   = cfg.moves.reposition_cm
 
 
 class Move:
-    def __init__(self, move_type, values):
+    def __init__(self, move_type, values, snapshot=True):
         self.move_type = move_type
         self.values = values
+        self.snapshot = snapshot
     
     def __repr__(self):
         return f'Move({self.move_type}, {self.values})'
@@ -42,6 +43,10 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
     elif command in ['forward_32', 'forward_22', 'forward_1', 'forward_2', 'forward_3']:
+        sequence.append(Move('balance', {}))
+        sequence.append(Move('balance', {}))
+        sequence.append(Move('balance', {}))
+        
         sequence.append(Move('body_movement', {'deltas': [0, 0, 3*UP_OR_DOWN_CM]}))
         delta_x = cfg.moves.forward_body_2_leg_cm
         sequence.append(Move('body_movement', {'deltas': [round(delta_x / 2, 1), 0, 0]}))
@@ -50,21 +55,25 @@ def get_sequence_for_command(command: str, kwargs=None):
 
         sequence.append(Move('endpoint_absolute', 
                     {'leg': [1], 'deltas': 
-                        [cfg.modes.walking_mode.x + cfg.moves.forward_body_2_leg_cm, 
-                         cfg.modes.walking_mode.y, None]}))
+                        [cfg.modes.walking_mode.x + cfg.moves.forward_body_2_leg_cm/2, 
+                         cfg.modes.walking_mode.y, None]},
+                         False))
         
         sequence.append(Move('endpoint_absolute', 
                     {'leg': [3], 'deltas': [
-                        -cfg.modes.walking_mode.x + cfg.moves.forward_body_2_leg_cm, 
-                        cfg.modes.walking_mode.y, None]}))
+                        -cfg.modes.walking_mode.x + cfg.moves.forward_body_2_leg_cm/2, 
+                        cfg.modes.walking_mode.y, None]},
+                        False))
         
         sequence.append(Move('endpoint_absolute', 
                     {'leg': [5], 'deltas': [
-                        cfg.moves.forward_body_2_leg_cm, 
-                        -cfg.modes.walking_mode.y, None]}))
+                        cfg.moves.forward_body_2_leg_cm/2, 
+                        -cfg.modes.walking_mode.y - cfg.robot.middle_leg_offset, None]},
+                        True))
         
         #sequence.append(Move('endpoint', {'leg': [1, 3, 5], 'deltas': [delta_x, 0, 0]}))
         
+        sequence.append(Move('touch', {}))
         sequence.append(Move('touch', {}))
         sequence.append(Move('touch', {}))
         sequence.append(Move('touch', {}))
@@ -83,18 +92,22 @@ def get_sequence_for_command(command: str, kwargs=None):
         #sequence.append(Move('endpoint', {'leg': [2, 4, 6], 'deltas': [delta_x, 0, 0]}))
         sequence.append(Move('endpoint_absolute', 
                     {'leg': [2], 'deltas': [
-                        cfg.moves.forward_body_2_leg_cm, 
-                        cfg.modes.walking_mode.y, None]}))
+                        0, #cfg.moves.forward_body_2_leg_cm/2, 
+                        cfg.modes.walking_mode.y + cfg.robot.middle_leg_offset, None]},
+                        False))
         sequence.append(Move('endpoint_absolute', 
                     {'leg': [4], 'deltas': [
-                        -cfg.modes.walking_mode.x + cfg.moves.forward_body_2_leg_cm, 
-                        -cfg.modes.walking_mode.y, None]}))
+                        -cfg.modes.walking_mode.x, # + cfg.moves.forward_body_2_leg_cm/2, 
+                        -cfg.modes.walking_mode.y, None]},
+                        False))
         sequence.append(Move('endpoint_absolute', 
                     {'leg': [6], 'deltas': [
-                        cfg.modes.walking_mode.x + cfg.moves.forward_body_2_leg_cm, 
-                        -cfg.modes.walking_mode.y, None]}))
+                        cfg.modes.walking_mode.x, # + cfg.moves.forward_body_2_leg_cm/2, 
+                        -cfg.modes.walking_mode.y, None]},
+                        True))
         
         
+        sequence.append(Move('touch', {}))
         sequence.append(Move('touch', {}))
         sequence.append(Move('touch', {}))
         sequence.append(Move('touch', {}))
@@ -213,7 +226,8 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
                 continue
             
         pitch, roll = float(pitch), float(roll)
-        balance_value = -3
+        pre_balance_value = 2
+        balance_value = -5
 
         with open(cfg.files.neopixel, "r") as f:
             legs_down = f.readline().split(',')[0]
@@ -224,21 +238,27 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
         leg1_down, leg2_down, leg3_down, leg4_down, leg5_down, leg6_down = legs_down
         
         if leg1_down == '0':
+            rk.leg_movement(1, [0, 0, pre_balance_value])
             rk.leg_move_custom(1, 'balance1', [0, 0, balance_value])
             print(f'{pitch, roll}. Branch 17. Balance [1] {balance_value}')
         elif leg2_down == '0':
+            rk.leg_movement(2, [0, 0, pre_balance_value])
             rk.leg_move_custom(2, 'balance1', [0, 0, balance_value])
             print(f'{pitch, roll}. Branch 18. Balance [2] {balance_value}')
         elif leg3_down == '0':
+            rk.leg_movement(3, [0, 0, pre_balance_value])
             rk.leg_move_custom(3, 'balance1', [0, 0, balance_value])
             print(f'{pitch, roll}. Branch 19. Balance [3] {balance_value}')
         elif leg4_down == '0':
+            rk.leg_movement(4, [0, 0, pre_balance_value])
             rk.leg_move_custom(4, 'balance1', [0, 0, balance_value])
             print(f'{pitch, roll}. Branch 20. Balance [4] {balance_value}')
         elif leg5_down == '0':
+            rk.leg_movement(5, [0, 0, pre_balance_value])
             rk.leg_move_custom(5, 'balance1', [0, 0, balance_value])
             print(f'{pitch, roll}. Branch 21. Balance [5] {balance_value}')
         elif leg6_down == '0':
+            rk.leg_movement(6, [0, 0, pre_balance_value])
             rk.leg_move_custom(6, 'balance1', [0, 0, balance_value])
             print(f'{pitch, roll}. Branch 22. Balance [6] {balance_value}')
 

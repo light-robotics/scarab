@@ -10,12 +10,12 @@ class robot:
     horizontal_y = 10
     vertical = 10
 
-    touch_down = -6
+    touch_down = -4
     touch_up = 24
 
     x_offset = 0
     y_offset = 0
-    middle_leg_offset = 5
+    middle_leg_offset = 3
 
     leg_up = 9
 
@@ -33,6 +33,10 @@ class speed:
     hit = 250
     ripple_gait = 500
     wave_gait = 350
+    touch = 500
+    balance = 1000
+    feedback_body = 1500
+    feedback_legs = 500
 
 @dataclass
 class limit:
@@ -79,7 +83,7 @@ class moves:
     up_or_down_cm = 2
     move_body_cm = 2
     forward_body_1_leg_cm = 6
-    forward_body_2_leg_cm = 4
+    forward_body_2_leg_cm = 6
     reposition_cm = 1
 
 @dataclass
