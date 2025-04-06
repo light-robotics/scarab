@@ -71,17 +71,14 @@ def average_angles(sensor, num_samples):
 def main():
     sensor = mpu6050(0x68)
 
-    pitch_bias = -3.5
-    roll_bias = 5.8
-
     while True:
         start_time = time.time()
 
         # Calculate average angles over 10 readings
         pitch_avg, roll_avg, yaw_avg = average_angles(sensor, cfg.gyroaccel.readings)
 
-        pitch_avg -= math.radians(pitch_bias)
-        roll_avg -= math.radians(roll_bias)
+        pitch_avg -= math.radians(cfg.gyroaccel.pitch_bias)
+        roll_avg -= math.radians(cfg.gyroaccel.roll_bias)
 
         pitch = round(math.degrees(pitch_avg), 2)
         roll = round(math.degrees(roll_avg), 2)
@@ -98,16 +95,13 @@ def main():
 def single_scan():
     sensor = mpu6050(0x68)
 
-    pitch_bias = 7.5
-    roll_bias = 5.8
-
     start_time = time.time()
 
     # Calculate average angles over 5 readings
     pitch_avg, roll_avg, yaw_avg = average_angles(sensor, 20)
 
-    pitch_avg -= math.radians(pitch_bias)
-    roll_avg -= math.radians(roll_bias)
+    pitch_avg -= math.radians(cfg.gyroaccel.pitch_bias)
+    roll_avg -= math.radians(cfg.gyroaccel.roll_bias)
 
     pitch = round(math.degrees(pitch_avg), 2)
     roll = round(math.degrees(roll_avg), 2)

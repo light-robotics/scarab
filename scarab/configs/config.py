@@ -33,10 +33,10 @@ class speed:
     hit = 250
     ripple_gait = 500
     wave_gait = 350
-    touch = 500
+    touch = 400
     balance = 1000
-    feedback_body = 1500
-    feedback_legs = 500
+    feedback_body = 700
+    feedback_legs = 400
 
 @dataclass
 class limit:
@@ -104,3 +104,5 @@ class files:
 
 class gyroaccel:
     readings = 10
+    pitch_bias = -0.5
+    roll_bias = 6
