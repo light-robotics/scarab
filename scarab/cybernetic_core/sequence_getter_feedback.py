@@ -46,6 +46,8 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
+        sequence.append(Move('balance', {}))
+        sequence.append(Move('balance', {}))
         
         sequence.append(Move('body_movement', {'deltas': [0, 0, 3*UP_OR_DOWN_CM]}))
         delta_x = cfg.moves.forward_body_2_leg_cm
@@ -93,6 +95,8 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
+        sequence.append(Move('balance', {}))
+        sequence.append(Move('balance', {}))
         
         
         sequence.append(Move('body_movement', {'deltas': [round(delta_x / 2, 1), 0, 0]}))
@@ -133,6 +137,8 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('touch', {}))
         sequence.append(Move('touch', {}))
 
+        sequence.append(Move('balance', {}))
+        sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
@@ -218,8 +224,11 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
         delta = move.values['deltas']
         rk.move_leg_endpoint(move.values['leg'], delta)
     elif move.move_type == 'touch':
-        with open(cfg.files.neopixel, "r") as f:
-            legs_down = f.readline().split(',')[0]
+        for i in range(3):
+            with open(cfg.files.neopixel, "r") as f:
+                legs_down = f.readline().split(',')[0]
+            if legs_down:
+                break
         print(f"touch. legs_down: {legs_down}")
         if sum(int(x) for x in legs_down) == 6:
             pass
@@ -246,8 +255,8 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
                 continue
             
         pitch, roll = float(pitch), float(roll)
-        pre_balance_value = 2
-        balance_value = -5
+        pre_balance_value = 3
+        balance_value = -6
 
         with open(cfg.files.neopixel, "r") as f:
             legs_down = f.readline().split(',')[0]

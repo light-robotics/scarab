@@ -1,17 +1,17 @@
 from dataclasses import dataclass
 
 class leg:
-    a = 12
-    b = 14.5
+    a = 15
+    b = 16
     d = 0
 
 class robot:
-    horizontal_x = 10
-    horizontal_y = 10
+    horizontal_x = 14
+    horizontal_y = 14
     vertical = 10
 
-    touch_down = -4
-    touch_up = 24
+    touch_down = -5
+    touch_up = 27
 
     x_offset = 0
     y_offset = 0
@@ -33,10 +33,10 @@ class speed:
     hit = 250
     ripple_gait = 500
     wave_gait = 350
-    touch = 400
+    touch = 600
     balance = 1000
     feedback_body = 700
-    feedback_legs = 400
+    feedback_legs = 600
 
 @dataclass
 class limit:
