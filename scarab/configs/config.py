@@ -22,7 +22,7 @@ class robot:
     diff_from_target_limit = 3.5
     diff_from_prev_limit = 0.5
 
-    balance_offset = 1.5
+    balance_offset = 2.5
 
 class movement:
     command_advance_ms = 0 #0.05

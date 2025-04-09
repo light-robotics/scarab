@@ -544,8 +544,14 @@ class Kinematics:
                 add_snapshot=add_snapshot
             )
     
+    def move_body_abs(self, z):
+        min_z = min([leg.C.z for leg in self.legs.values()])
+        print(f'Min_z, z, z + min_z: {min_z, z, z + min_z}')
+        self.body_movement(0, 0, z + min_z)
+
     def move_leg_endpoint_abs(self, leg_num, leg_delta, snapshot_type='endpoint', add_snapshot=True):
         min_z = min([leg.C.z for leg in self.legs.values()])
+        
         leg = self.legs[leg_num]
         target_x = leg_delta[0]
         if leg_delta[0] is None:
@@ -558,7 +564,7 @@ class Kinematics:
         target_z = leg_delta[2]
         if leg_delta[2] is None:
             target_z = leg.C.z - min_z
-
+        print(f'target_z, leg.C.z, min_z: {(target_z, leg.C.z, min_z)}')
         new_delta = [round(target_x - leg.C.x, 1), round(target_y - leg.C.y, 1), round(target_z - leg.C.z + min_z, 1)]
         print(f'Legnum: {leg_num}.\nOriginal delta: {leg_delta}\nNew delta: {new_delta}')
         self.logger.info(f'move_leg_endpoint_abs. Legnum: {leg_num}.\nOriginal delta: {leg_delta}\nNew delta: {new_delta}')

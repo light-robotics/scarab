@@ -49,7 +49,9 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
         
-        sequence.append(Move('body_movement', {'deltas': [0, 0, 3*UP_OR_DOWN_CM]}))
+        #sequence.append(Move('body_movement', {'deltas': [0, 0, 3*UP_OR_DOWN_CM]}))
+        sequence.append(Move('body_absolute', {'z': 27}))
+        
         delta_x = cfg.moves.forward_body_2_leg_cm
         sequence.append(Move('body_movement', {'deltas': [round(delta_x / 2, 1), 0, 0]}))
 
@@ -214,6 +216,8 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
             rk.move_leg_endpoint_abs(leg, move.values['deltas'][leg], add_snapshot=False)
         if move.snapshot:
             rk.add_angles_snapshot('endpoint')
+    elif move.move_type == 'body_absolute':
+        rk.move_body_abs(move.values['z'])
     elif move.move_type == 'endpoints':
         rk.move_leg_endpoint(move.values['legs'][0], move.values['deltas'], add_snapshot=False)
         rk.move_leg_endpoint(move.values['legs'][1], move.values['deltas'])
