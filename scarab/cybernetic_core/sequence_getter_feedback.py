@@ -42,7 +42,34 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
-    elif command in ['forward_32', 'forward_22', 'forward_1', 'forward_2', 'forward_3']:
+    elif command in [
+        'forward_32', 
+        'forward_22', 
+        'forward_1', 
+        'forward_2', 
+        'forward_3',
+        'backward_1',
+        'backward_2',
+        'backward_22',
+        'backward_3',
+        'backward_32',
+        'strafe_right_1',
+        'strafe_right_2',
+        'strafe_right_22',
+        'strafe_right_3',
+        'strafe_right_32',
+        'strafe_left_1',
+        'strafe_left_2',
+        'strafe_left_22',
+        'strafe_left_3',
+        'strafe_left_32',
+        'diagonal_forward_right',
+        'diagonal_forward_left',
+        'diagonal_backward_right',
+        'diagonal_backward_left'
+        ]:
+        sequence.append(Move(command, {}))
+    elif command == 'forward_two_legged_fb':
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
         sequence.append(Move('balance', {}))
@@ -205,6 +232,93 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
         rk.add_angles_snapshot('endpoint')
     elif move.move_type == 'body_movement':
         rk.body_movement(*move.values['deltas'])
+    elif move.move_type == 'forward_1':
+        # Legs 1 and 3 moved x1
+        rk.move_2_legs_phased_13(FORWARD_LEGS_2LEG_CM, 0)
+    elif move.move_type == 'forward_2':
+        # Legs 2 and 4 moved x2
+        rk.move_2_legs_phased_24(2 * FORWARD_LEGS_2LEG_CM, 0)
+    elif move.move_type == 'forward_22':
+        # Legs 2 and 4 moved x1
+        rk.move_2_legs_phased_24(FORWARD_LEGS_2LEG_CM, 0)
+    elif move.move_type == 'forward_3':
+        # Legs 1 and 3 moved x2
+        for _ in range(3):
+            rk.move_2_legs_phased_13(2 * FORWARD_LEGS_2LEG_CM, 0)
+            rk.move_2_legs_phased_24(2 * FORWARD_LEGS_2LEG_CM, 0)
+        rk.move_2_legs_phased_13(2 * FORWARD_LEGS_2LEG_CM, 0)
+    elif move.move_type == 'forward_32':
+        # Legs 1 and 3 moved x1
+        rk.move_2_legs_phased_13(FORWARD_LEGS_2LEG_CM, 0)
+    elif move.move_type == 'backward_1':
+        # Legs 1 and 3 moved x1
+        rk.move_2_legs_phased_13(-FORWARD_LEGS_2LEG_CM, 0)
+    elif move.move_type == 'backward_2':
+        # Legs 2 and 4 moved x2
+        rk.move_2_legs_phased_24(-2 * FORWARD_LEGS_2LEG_CM, 0)
+    elif move.move_type == 'backward_22':
+        # Legs 2 and 4 moved x1
+        rk.move_2_legs_phased_24(-FORWARD_LEGS_2LEG_CM, 0)
+    elif move.move_type == 'backward_3':
+        # Legs 1 and 3 moved x2
+        for _ in range(3):
+            rk.move_2_legs_phased_13(-2 * FORWARD_LEGS_2LEG_CM, 0)
+            rk.move_2_legs_phased_24(-2 * FORWARD_LEGS_2LEG_CM, 0)
+        rk.move_2_legs_phased_13(-2 * FORWARD_LEGS_2LEG_CM, 0)
+    elif move.move_type == 'backward_32':
+        # Legs 1 and 3 moved x1
+        rk.move_2_legs_phased_13(-FORWARD_LEGS_2LEG_CM, 0)
+    
+    elif move.move_type == 'strafe_right_1':
+        # Legs 1 and 3 moved x1
+        rk.move_2_legs_phased_13(0, -FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'strafe_right_2':
+        # Legs 2 and 4 moved x2
+        rk.move_2_legs_phased_24(0, -2 * FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'strafe_right_22':
+        # Legs 2 and 4 moved x1
+        rk.move_2_legs_phased_24(0, -FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'strafe_right_3':
+        # Legs 1 and 3 moved x2
+        for _ in range(3):
+            rk.move_2_legs_phased_13(0, -2 * FORWARD_LEGS_2LEG_CM)
+            rk.move_2_legs_phased_24(0, -2 * FORWARD_LEGS_2LEG_CM)
+        rk.move_2_legs_phased_13(0, -2 * FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'strafe_right_32':
+        # Legs 1 and 3 moved x1
+        rk.move_2_legs_phased_13(0, -FORWARD_LEGS_2LEG_CM)
+
+    elif move.move_type == 'strafe_left_1':
+        # Legs 1 and 3 moved x1
+        rk.move_2_legs_phased_13(0, FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'strafe_left_2':
+        # Legs 2 and 4 moved x2
+        rk.move_2_legs_phased_24(0, 2 * FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'strafe_left_22':
+        # Legs 2 and 4 moved x1
+        rk.move_2_legs_phased_24(0, FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'strafe_left_3':
+        # Legs 1 and 3 moved x2
+        for _ in range(3):
+            rk.move_2_legs_phased_13(0, 2 * FORWARD_LEGS_2LEG_CM)
+            rk.move_2_legs_phased_24(0, 2 * FORWARD_LEGS_2LEG_CM)
+        rk.move_2_legs_phased_13(0, 2 * FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'strafe_left_32':
+        # Legs 1 and 3 moved x1
+        rk.move_2_legs_phased_13(0, FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'diagonal_forward_right':
+        rk.move_2_legs_phased_13(FORWARD_LEGS_2LEG_CM, -FORWARD_LEGS_2LEG_CM)
+        rk.move_2_legs_phased_24(FORWARD_LEGS_2LEG_CM, -FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'diagonal_forward_left':
+        rk.move_2_legs_phased_13(FORWARD_LEGS_2LEG_CM, FORWARD_LEGS_2LEG_CM)
+        rk.move_2_legs_phased_24(FORWARD_LEGS_2LEG_CM, FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'diagonal_backward_right':
+        rk.move_2_legs_phased_13(-FORWARD_LEGS_2LEG_CM, -FORWARD_LEGS_2LEG_CM)
+        rk.move_2_legs_phased_24(-FORWARD_LEGS_2LEG_CM, -FORWARD_LEGS_2LEG_CM)
+    elif move.move_type == 'diagonal_backward_left':
+        rk.move_2_legs_phased_13(-FORWARD_LEGS_2LEG_CM, FORWARD_LEGS_2LEG_CM)
+        rk.move_2_legs_phased_24(-FORWARD_LEGS_2LEG_CM, FORWARD_LEGS_2LEG_CM)
+    
     elif move.move_type == 'body_to_center':
         rk.body_to_center()
     elif move.move_type == 'endpoint':

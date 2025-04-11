@@ -28,6 +28,7 @@ class RobotDualSense(DualSense):
         self.connect()
         self.init_listeners()
         self.light_on = False
+        self.feedback_mode_on = False
         self.started = False
         self.mode = FenixModes.WALKING
         self.left_x, self.left_y, self.right_x, self.right_y = 0, 0, 0, 0
@@ -43,6 +44,7 @@ class RobotDualSense(DualSense):
         # register the button callbacks
         self.controller.btn_ps.on_down(self.on_playstation_button_press)
         self.controller.btn_options.on_down(self.on_options_press)
+        self.controller.btn_create.on_down(self.on_create_press)
         self.controller.btn_r1.on_down(self.on_R1_press)
         self.controller.btn_l1.on_down(self.on_L1_press)
         self.controller.right_trigger.on_change(self.on_R2_press)
@@ -76,9 +78,15 @@ class RobotDualSense(DualSense):
         time.sleep(0.5)
         self.command_writer.write_command('none', 1000)
     
-    #def on_share_press(self):
-    #    self.command_writer.write_command('reset', 1000)
-
+    def on_create_press(self):
+        self.feedback_mode_on = not self.feedback_mode_on
+        print(f'feedback_mode_on switched to {self.feedback_mode_on}')
+        if not self.feedback_mode_on:
+            #self.neopixel.issue_command('light_on')
+            self.on_triangle_press() # switch to run mode
+        else:
+            self.neopixel.issue_command('running_diodes', 'white', 255)
+    
     def on_R1_press(self):
         if self.light_on:
             self.light_on = False
@@ -87,7 +95,7 @@ class RobotDualSense(DualSense):
         else:
             self.light_on = True
             self.neopixel.issue_command('light_on')
-            print('Turn the lights on')        
+            print('Turn the lights on')
     
     def on_R2_press(self, value):
         if value < 0.1:
@@ -132,7 +140,10 @@ class RobotDualSense(DualSense):
             self.command_writer.write_command('none', 250)
         elif self.right_x == 0 and self.right_y == 0:            
             if self.left_y > 0.6 and abs(self.left_x) < 0.35:
-                self.command_writer.write_command('forward_two_legged', cfg.speed.run)
+                if self.feedback_mode_on:
+                    self.command_writer.write_command('forward_two_legged_fb', cfg.speed.run)
+                else:
+                    self.command_writer.write_command('forward_two_legged', cfg.speed.run)
             elif self.left_y < -0.6 and abs(self.left_x) < 0.35:
                 self.command_writer.write_command('backward_two_legged', cfg.speed.run)
             elif self.left_x > 0.6 and abs(self.left_y) < 0.35:
