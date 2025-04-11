@@ -50,7 +50,7 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('balance', {}))
         
         #sequence.append(Move('body_movement', {'deltas': [0, 0, 3*UP_OR_DOWN_CM]}))
-        sequence.append(Move('body_absolute', {'z': 27}))
+        sequence.append(Move('body_absolute', {'z': 26}))
         
         delta_x = cfg.moves.forward_body_2_leg_cm
         sequence.append(Move('body_movement', {'deltas': [round(delta_x / 2, 1), 0, 0]}))
@@ -260,7 +260,8 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
             
         pitch, roll = float(pitch), float(roll)
         pre_balance_value = 3
-        balance_value = -6
+        one_leg_balance_value = -6
+        balance_value = -3 # body
 
         with open(cfg.files.neopixel, "r") as f:
             legs_down = f.readline().split(',')[0]
@@ -272,28 +273,28 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
         
         if leg1_down == '0':
             rk.leg_movement(1, [0, 0, pre_balance_value])
-            rk.leg_move_custom(1, 'balance1', [0, 0, balance_value])
-            print(f'{pitch, roll}. Branch 17. Balance [1] {balance_value}')
+            rk.leg_move_custom(1, 'balance1', [0, 0, one_leg_balance_value])
+            print(f'{pitch, roll}. Branch 17. Balance [1] {one_leg_balance_value}')
         elif leg2_down == '0':
             rk.leg_movement(2, [0, 0, pre_balance_value])
-            rk.leg_move_custom(2, 'balance1', [0, 0, balance_value])
-            print(f'{pitch, roll}. Branch 18. Balance [2] {balance_value}')
+            rk.leg_move_custom(2, 'balance1', [0, 0, one_leg_balance_value])
+            print(f'{pitch, roll}. Branch 18. Balance [2] {one_leg_balance_value}')
         elif leg3_down == '0':
             rk.leg_movement(3, [0, 0, pre_balance_value])
-            rk.leg_move_custom(3, 'balance1', [0, 0, balance_value])
-            print(f'{pitch, roll}. Branch 19. Balance [3] {balance_value}')
+            rk.leg_move_custom(3, 'balance1', [0, 0, one_leg_balance_value])
+            print(f'{pitch, roll}. Branch 19. Balance [3] {one_leg_balance_value}')
         elif leg4_down == '0':
             rk.leg_movement(4, [0, 0, pre_balance_value])
-            rk.leg_move_custom(4, 'balance1', [0, 0, balance_value])
-            print(f'{pitch, roll}. Branch 20. Balance [4] {balance_value}')
+            rk.leg_move_custom(4, 'balance1', [0, 0, one_leg_balance_value])
+            print(f'{pitch, roll}. Branch 20. Balance [4] {one_leg_balance_value}')
         elif leg5_down == '0':
             rk.leg_movement(5, [0, 0, pre_balance_value])
-            rk.leg_move_custom(5, 'balance1', [0, 0, balance_value])
-            print(f'{pitch, roll}. Branch 21. Balance [5] {balance_value}')
+            rk.leg_move_custom(5, 'balance1', [0, 0, one_leg_balance_value])
+            print(f'{pitch, roll}. Branch 21. Balance [5] {one_leg_balance_value}')
         elif leg6_down == '0':
             rk.leg_movement(6, [0, 0, pre_balance_value])
-            rk.leg_move_custom(6, 'balance1', [0, 0, balance_value])
-            print(f'{pitch, roll}. Branch 22. Balance [6] {balance_value}')
+            rk.leg_move_custom(6, 'balance1', [0, 0, one_leg_balance_value])
+            print(f'{pitch, roll}. Branch 22. Balance [6] {one_leg_balance_value}')
 
         elif pitch < -cfg.robot.balance_offset and abs(roll) < cfg.robot.balance_offset:
             #if rk.legs[1].D.z + rk.legs[4].D.z > rk.legs[2].D.z + rk.legs[3].D.z:
