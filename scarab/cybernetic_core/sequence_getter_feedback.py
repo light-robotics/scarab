@@ -66,7 +66,9 @@ def get_sequence_for_command(command: str, kwargs=None):
         'diagonal_forward_right',
         'diagonal_forward_left',
         'diagonal_backward_right',
-        'diagonal_backward_left'
+        'diagonal_backward_left',
+        'turn_left_fb',
+        'turn_right_fb'
         ]:
         sequence.append(Move(command, {}))
     elif command == 'forward_two_legged_fb':
@@ -318,7 +320,10 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
     elif move.move_type == 'diagonal_backward_left':
         rk.move_2_legs_phased_13(-FORWARD_LEGS_2LEG_CM, FORWARD_LEGS_2LEG_CM)
         rk.move_2_legs_phased_24(-FORWARD_LEGS_2LEG_CM, FORWARD_LEGS_2LEG_CM)
-    
+    elif move.move_type == 'turn_left_fb':
+        rk.turn_move(20)
+    elif move.move_type == 'turn_right_fb':
+        rk.turn_move(-20)
     elif move.move_type == 'body_to_center':
         rk.body_to_center()
     elif move.move_type == 'endpoint':

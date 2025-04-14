@@ -162,7 +162,7 @@ class Kinematics:
 
     @property
     def height(self):
-        return sum([(leg.O.z - leg.D.z) for leg in self.legs.values()])/4
+        return sum([(leg.O.z - leg.C.z) for leg in self.legs.values()])/4
         #return self.current_legs_offset_v
 
     @property
@@ -387,6 +387,49 @@ class Kinematics:
                            -body_delta_xy[1],
                            0, 
                            snapshot)
+
+    def turn_move(self, angle_deg):
+        self.turn(-angle_deg)
+        self.turn(angle_deg, only_body=True)
+
+    def turn(self, angle_deg, only_body=False):
+        angle = math.radians(angle_deg)
+
+        center_x = 0
+        center_y = 0
+
+        for leg in [self.legs[2], self.legs[4], self.legs[6]]:
+            x_new, y_new = turn_on_angle(center_x, center_y, leg.C.x, leg.C.y, angle)
+            delta_x = x_new - leg.C.x
+            delta_y = y_new - leg.C.y
+
+            leg.move_end_point(delta_x, delta_y, cfg.robot.leg_up)
+
+        if not only_body:
+            self.add_angles_snapshot()
+
+        for leg in [self.legs[2], self.legs[4], self.legs[6]]:
+            leg.move_end_point(0, 0, -cfg.robot.leg_up)
+
+        if not only_body:
+            self.add_angles_snapshot()
+
+        for leg in [self.legs[1], self.legs[3], self.legs[5]]:
+            x_new, y_new = turn_on_angle(center_x, center_y, leg.C.x, leg.C.y, angle)
+            delta_x = x_new - leg.C.x
+            delta_y = y_new - leg.C.y
+
+            leg.move_end_point(delta_x, delta_y, cfg.robot.leg_up)
+
+        if not only_body:
+            self.add_angles_snapshot()
+
+        for leg in [self.legs[1], self.legs[3], self.legs[5]]:
+            leg.move_end_point(0, 0, -cfg.robot.leg_up)
+
+        self.add_angles_snapshot('endpoint')
+
+        self.body_to_center()
 
     def move_leg_endpoint(self, leg_num, leg_delta, snapshot_type='endpoint', add_snapshot=True):        
         self.legs[leg_num].move_end_point(*leg_delta)

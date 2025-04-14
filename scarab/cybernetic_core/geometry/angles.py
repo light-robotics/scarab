@@ -236,9 +236,12 @@ def turn_on_angle(start_x, start_y, x1, y1, angle):
     result_angle = angle + initial_angle
     print(f'{math.degrees(initial_angle)} -> {math.degrees(result_angle)}')
 
-    return round(start_x + math.cos(result_angle) * l, 2), \
-           round(start_y + math.sin(result_angle) * l, 2)
+    x2 = round(start_x + math.cos(result_angle) * l, 2)
+    y2 = round(start_y + math.sin(result_angle) * l, 2)
 
+    print(f'x2, y2: {round(x2, 2)}, {round(y2, 2)}')
+
+    return x2, y2
 
 if __name__ == '__main__':
     logging.config.dictConfig(code_config.logger_config)

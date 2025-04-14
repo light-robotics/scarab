@@ -6,13 +6,13 @@ class leg:
     d = 0
 
 class robot:
-    horizontal_x = 13
-    horizontal_y = 13
+    horizontal_x = 15
+    horizontal_y = 15
     vertical = 10
 
     touch_down = -6
-    touch_up = 26
-    feedback_body_up = 26
+    touch_up = 27
+    feedback_body_up = 27
 
     fb_pre_balance_value = 3
     fb_one_leg_balance_value = -6
@@ -21,7 +21,7 @@ class robot:
 
     x_offset = 0
     y_offset = 0
-    middle_leg_offset = 7
+    middle_leg_offset = 5
 
     leg_up = 9
 

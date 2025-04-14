@@ -147,9 +147,15 @@ class RobotDualSense(DualSense):
             elif self.left_y < -0.6 and abs(self.left_x) < 0.35:
                 self.command_writer.write_command('backward_two_legged', cfg.speed.run)
             elif self.left_x > 0.6 and abs(self.left_y) < 0.35:
-                self.command_writer.write_command('strafe_right_two_legged', cfg.speed.run)
+                if self.feedback_mode_on:
+                    self.command_writer.write_command('turn_right_fb', cfg.speed.run)
+                else:
+                    self.command_writer.write_command('strafe_right_two_legged', cfg.speed.run)
             elif self.left_x < -0.6 and abs(self.left_y) < 0.35:
-                self.command_writer.write_command('strafe_left_two_legged', cfg.speed.run)
+                if self.feedback_mode_on:
+                    self.command_writer.write_command('turn_left_fb', cfg.speed.run)
+                else:
+                    self.command_writer.write_command('strafe_left_two_legged', cfg.speed.run)
                 
             elif self.left_x > 0.45 and self.left_y > 0.45:
                 #self.command_writer.write_command('diagonal_forward_right', cfg.speed.run)
