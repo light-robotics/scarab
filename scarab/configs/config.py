@@ -11,8 +11,13 @@ class robot:
     vertical = 10
 
     touch_down = -6
+    touch_down_iterations = 5
     touch_up = 27
     feedback_body_up = 27
+    reset_touch_up = 22
+    reset_feedback_body_up = 20
+    
+    balance_iterations = 5
 
     fb_pre_balance_value = 3
     fb_one_leg_balance_value = -6
@@ -34,7 +39,7 @@ class movement:
     command_advance_ms = 0 #0.05
 
 class speed:
-    run = 250
+    run = 500
     walk = 500
     hit = 250
     ripple_gait = 500
@@ -89,7 +94,7 @@ class moves:
     up_or_down_cm = 2
     move_body_cm = 2
     forward_body_1_leg_cm = 6
-    forward_body_2_leg_cm = 6
+    forward_body_2_leg_cm = 7
     reposition_cm = 1
 
 @dataclass
