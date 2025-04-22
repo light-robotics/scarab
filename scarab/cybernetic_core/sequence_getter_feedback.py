@@ -165,14 +165,14 @@ def get_sequence_for_command(command: str, kwargs=None):
             sequence.append(Move('balance', {}))
         
         #sequence.append(Move('body_movement', {'deltas': [0, 0, 3*UP_OR_DOWN_CM]}))
-        sequence.append(Move('body_absolute', {'z': cfg.robot.reset_feedback_body_up}))
+        #sequence.append(Move('body_absolute', {'z': cfg.robot.reset_feedback_body_up}))
         
         sequence.append(Move('endpoint_absolute', {
                 'leg': [1, 3, 5], 
                 'deltas': {
-                    1: [None, None, cfg.robot.touch_up],
-                    3: [None, None, cfg.robot.touch_up],
-                    5: [None, None, cfg.robot.touch_up]
+                    1: [cfg.modes.walking_mode.x, cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
+                    3: [-cfg.modes.walking_mode.x, cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
+                    5: [0, -cfg.modes.walking_mode.y, cfg.robot.reset_touch_up]
                 }
                 }))
     
@@ -185,9 +185,9 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('endpoint_absolute', 
                              {'leg': [2, 4, 6],
                             'deltas': {
-                                2: [None, None, cfg.robot.touch_up],
-                                4: [None, None, cfg.robot.touch_up],
-                                6: [None, None, cfg.robot.touch_up]
+                                2: [0, cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
+                                4: [-cfg.modes.walking_mode.x, -cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
+                                6: [cfg.modes.walking_mode.x, -cfg.modes.walking_mode.y, cfg.robot.reset_touch_up]
                             }
                             }))
         

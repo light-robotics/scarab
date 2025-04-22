@@ -629,8 +629,8 @@ if __name__ == '__main__':
         time.sleep(0.0002)
 
     #m3.set_id(1, 8)
-    #test_servo = 8
-    #m3.move_servo_to_angle(test_servo, 0, 3000)
+    #test_servo = 17
+    #m4.move_servo_to_angle(test_servo, 30, 3000)
     #time.sleep(3)
     #m3.disable_torque(test_servo)
     

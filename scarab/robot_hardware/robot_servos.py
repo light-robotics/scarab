@@ -1,6 +1,7 @@
 import time
 import sys
 import os
+import math
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from hardware.htd45h import HTD45H, read_values
 import logging
@@ -186,14 +187,37 @@ class RobotServos:
         self.logger.info(f'Command sent. Rate: {rate}, angles: {adjusted_angles}')
         time.sleep(rate / 1000)
     
-    def set_servo_values_paced_wo_feedback(self, angles):
+    def set_servo_values_paced_wo_feedback(self, angles: RobotPosition):
         _, max_angle_diff = self.get_angles_diff(angles)
         rate = round(max(self.speed * max_angle_diff / 45, self.max_speed)) # speed is normalized
         self.logger.info(f'max_angle_diff: {max_angle_diff}, self.speed : {self.speed}, self.speed * max_angle_diff / 45 : {self.speed * max_angle_diff / 45}')
         
-        self.send_command_to_servos(angles, rate)
-        self.logger.info(f'Command sent. Rate: {rate}, angles: {angles}')
-        time.sleep(rate / 1000)
+        #print(type(angles), angles.__dict__)
+        # TODO: make good tettas compare
+        bad_move = False
+        if angles.__dict__['l2t'] - angles.__dict__['l1t'] > 10:
+            self.logger.warning(f"Alarm1: {angles.__dict__['l2t']}, {angles.__dict__['l1t']}")
+            bad_move = True
+
+        if angles.__dict__['l3t'] - angles.__dict__['l2t'] > 10:
+            self.logger.warning(f"Alarm2: {angles.__dict__['l3t']}, {angles.__dict__['l2t']}")
+            bad_move = True
+
+        if angles.__dict__['l5t'] - angles.__dict__['l4t'] > 10:
+            self.logger.warning(f"Alarm3: {angles.__dict__['l5t']}, {angles.__dict__['l4t']}")
+            bad_move = True
+
+        if angles.__dict__['l6t'] - angles.__dict__['l5t'] > 10:
+            self.logger.warning(f"Alarm4: {angles.__dict__['l6t']}, {angles.__dict__['l5t']}")
+            bad_move = True
+
+        if not bad_move:
+            self.send_command_to_servos(angles, rate)
+            self.logger.info(f'Command sent. Rate: {rate}, angles: {angles}')
+
+            time.sleep(rate / 1000)
+        else:
+            self.logger.error('Move skipped due to tetta error')
         return self.get_current_angles()
             
     def set_servo_values_not_paced(self, angles):

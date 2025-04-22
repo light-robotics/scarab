@@ -6,15 +6,15 @@ class leg:
     d = 0
 
 class robot:
-    horizontal_x = 15
-    horizontal_y = 15
+    horizontal_x = 16
+    horizontal_y = 16
     vertical = 10
 
-    touch_down = -6
+    touch_down = -5
     touch_down_iterations = 5
-    touch_up = 27
-    feedback_body_up = 27
-    reset_touch_up = 22
+    touch_up = 25
+    feedback_body_up = 25
+    reset_touch_up = 25
     reset_feedback_body_up = 20
     
     balance_iterations = 5
@@ -22,11 +22,11 @@ class robot:
     fb_pre_balance_value = 3
     fb_one_leg_balance_value = -6
     fb_balance_value = -3 # body
-    fb_inward_delta = 2
+    fb_inward_delta = 1
 
     x_offset = 0
     y_offset = 0
-    middle_leg_offset = 5
+    middle_leg_offset = 8
 
     leg_up = 9
 
@@ -94,7 +94,7 @@ class moves:
     up_or_down_cm = 2
     move_body_cm = 2
     forward_body_1_leg_cm = 6
-    forward_body_2_leg_cm = 7
+    forward_body_2_leg_cm = 8
     reposition_cm = 1
 
 @dataclass

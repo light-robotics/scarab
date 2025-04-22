@@ -299,7 +299,9 @@ class RobotDualSense(DualSense):
         #if self.mode in [FenixModes.BATTLE, FenixModes.RUN]:
         #    self.command_writer.write_command('save_lidar_data', 1000)
         #else:
-        if self.mode == FenixModes.BATTLE:
+        if self.feedback_mode_on:
+            self.command_writer.write_command('reset', 1000)
+        elif self.mode == FenixModes.BATTLE:
            self.command_writer.write_command('hit_2', cfg.speed.walk)
         elif self.mode == FenixModes.WALKING:
             self.command_writer.write_command('touching', 2000)           
