@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from cybernetic_core.kinematics import Kinematics
 from cybernetic_core.geometry.angles import build_position_from_servos, convert_legs_angles_to_kinematic_C
 from cybernetic_core.sequence_getter_feedback import get_sequence_for_command, get_angles_for_sequence
-from cybernetic_core.geometry.angles import AnglesException, DistanceException
+from cybernetic_core.geometry.angles import AnglesException, DistanceException, TettasException
 from core.utils.multiphase_moves import CommandsForwarder
 import configs.code_config as code_config
 import configs.config as cfg
@@ -167,14 +167,18 @@ class MovementProcessor:
                         print(f'Attempt {attempts}. Execution of command UP resulted in:\n{e}\nMoving down')
                         down_sequence = get_sequence_for_command('down')
                         self.get_and_move_to_angles(down_sequence[0])
-                if attempts == 4:
-                    print('Executing reset')
-                    try:
-                        reset_sequence = get_sequence_for_command('reset')
-                        for angles in reset_sequence:
-                            self.get_and_move_to_angles(angles)
-                    except (AnglesException, DistanceException) as e:
-                        print(f'Attempt {attempts}. Execution of command RESET resulted in:\n{e}\nMoving down')
+                except TettasException as e:
+                    print(f'Attempt {attempts}. Execution of command UP resulted in:\n{e}\nMoving down')
+                    # Here we should change length of step
+                    
+                #if attempts == 4:
+                #    print('Executing reset')
+                #    try:
+                #        reset_sequence = get_sequence_for_command('reset')
+                #        for angles in reset_sequence:
+                #            self.get_and_move_to_angles(angles)
+                #    except (AnglesException, DistanceException) as e:
+                #        print(f'Attempt {attempts}. Execution of command RESET resulted in:\n{e}\nMoving down')
             if attempts == 6:
                 print('Command failed all attempts. Exiting') 
                 return False

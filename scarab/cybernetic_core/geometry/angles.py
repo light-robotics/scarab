@@ -18,6 +18,9 @@ class DistanceException(Exception):
 class AnglesException(Exception):
     pass
 
+class TettasException(Exception):
+    pass
+
 class GeometryException(Exception):
     pass
 
@@ -242,6 +245,33 @@ def turn_on_angle(start_x, start_y, x1, y1, angle):
     print(f'x2, y2: {round(x2, 2)}, {round(y2, 2)}')
 
     return x2, y2
+
+def tettas_ok(l1t, l2t, l3t, l4t, l5t, l6t, logger):
+    l1t = convert_tetta(l1t, 1)
+    l2t = convert_tetta(l2t, 2)
+    l3t = convert_tetta(l3t, 3)
+    l4t = convert_tetta(l4t, 4)
+    l5t = convert_tetta(l5t, 5)
+    l6t = convert_tetta(l6t, 6)
+    tettas_limit = 12
+    if l2t - l1t > tettas_limit:
+        logger.error(f"Alarm1: {l2t}, {l1t}")
+        return False
+
+    if l3t - l2t > tettas_limit:
+        logger.error(f"Alarm2: {l3t}, {l2t}")
+        return False
+
+    if l5t - l4t > tettas_limit:
+        logger.error(f"Alarm3: {l5t}, {l4t}")
+        return False
+
+    if l6t - l5t > tettas_limit:
+        logger.error(f"Alarm4: {l6t}, {l5t}")
+        return False
+   
+    return True
+
 
 if __name__ == '__main__':
     logging.config.dictConfig(code_config.logger_config)

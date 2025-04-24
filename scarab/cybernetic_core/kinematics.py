@@ -6,7 +6,15 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from configs import config as cfg
-from cybernetic_core.geometry.angles import RobotPosition, calculate_leg_angles, turn_on_angle, convert_legs_angles_C, calculate_C_point
+from cybernetic_core.geometry.angles import (
+    TettasException,
+    RobotPosition, 
+    calculate_leg_angles, 
+    turn_on_angle, 
+    convert_legs_angles_C, 
+    calculate_C_point,
+    tettas_ok
+)
 from cybernetic_core.geometry.lines import Point, LinearFunc, calculate_intersection, move_on_a_line
 import configs.code_config as code_config
 import logging.config
@@ -116,7 +124,16 @@ class Kinematics:
             self.add_angles_snapshot('init')
     
     def check_tettas(self):
-        pass
+        if not tettas_ok(
+            self.legs[1].tetta,
+            self.legs[2].tetta,
+            self.legs[3].tetta,
+            self.legs[4].tetta,
+            self.legs[5].tetta,
+            self.legs[6].tetta,
+            self.logger
+        ):
+            raise TettasException('Bad tettas')
 
     #def move_leg_endpoint(self, legnum, delta_x, delta_y, delta_z):
     #    self.legs[legnum].move_end_point(delta_x, delta_y, delta_z)
@@ -580,11 +597,9 @@ class Kinematics:
         for i in range(iterations):
             self.move_leg_endpoint(
                 leg_num, 
-                [
-                    round(leg_delta[0]/iterations, 1), 
-                    round(leg_delta[1]/iterations, 1),
-                    round(leg_delta[2]/iterations, 1)
-                ], 
+                round(leg_delta[0]/iterations, 1), 
+                round(leg_delta[1]/iterations, 1),
+                round(leg_delta[2]/iterations, 1), 
                 mode,
                 add_snapshot=add_snapshot
             )
