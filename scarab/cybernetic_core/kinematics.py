@@ -118,8 +118,13 @@ class Kinematics:
     def check_tettas(self):
         pass
 
-    def move_leg_endpoint(self, legnum, delta_x, delta_y, delta_z):
-        self.legs[legnum].move_end_point(delta_x, delta_y, delta_z)
+    #def move_leg_endpoint(self, legnum, delta_x, delta_y, delta_z):
+    #    self.legs[legnum].move_end_point(delta_x, delta_y, delta_z)
+
+    def move_leg_endpoint(self, leg_num, delta_x, delta_y, delta_z, snapshot_type='endpoint', add_snapshot=False):        
+        self.legs[leg_num].move_end_point(delta_x, delta_y, delta_z)
+        if add_snapshot:
+            self.add_angles_snapshot(snapshot_type)
         self.check_tettas()
     
     def move_leg_mountpoint(self, legnum, delta_x, delta_y, delta_z):
@@ -253,9 +258,9 @@ class Kinematics:
     ################## MOVEMENTS START HERE ##################
     def leg_movement(self, leg_num, leg_delta, snapshot=True):
         self.logger.info(f'Leg move {leg_num}: {leg_delta}')
-        leg = self.legs[leg_num]
+        #leg = self.legs[leg_num]
 
-        leg.move_end_point(leg_delta[0], leg_delta[1], leg_delta[2])
+        self.move_leg_endpoint(leg_num, leg_delta[0], leg_delta[1], leg_delta[2])
         if snapshot:
             self.add_angles_snapshot('endpoint')
 
@@ -264,8 +269,8 @@ class Kinematics:
         if delta_x == delta_y == delta_z == 0:
             return
 
-        for leg in self.legs.values():
-            leg.move_mount_point(delta_x, delta_y, delta_z)
+        for leg_num in self.legs.keys():
+            self.move_leg_mountpoint(leg_num, delta_x, delta_y, delta_z)
 
         if snapshot:
             self.add_angles_snapshot('body')
@@ -332,24 +337,24 @@ class Kinematics:
         #print(f'Deltas5: {delta_x_5, delta_y_5}')
         #print(f'Deltas6: {delta_x_6, delta_y_6}')
 
-        self.legs[2].move_end_point(delta_x_2, delta_y_2, cfg.robot.leg_up)
-        self.legs[4].move_end_point(delta_x_4, delta_y_4, cfg.robot.leg_up)
-        self.legs[6].move_end_point(delta_x_6, delta_y_6, cfg.robot.leg_up)
+        self.move_leg_endpoint(2, delta_x_2, delta_y_2, cfg.robot.leg_up)
+        self.move_leg_endpoint(4, delta_x_4, delta_y_4, cfg.robot.leg_up)
+        self.move_leg_endpoint(6, delta_x_6, delta_y_6, cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
 
-        self.legs[2].move_end_point(0, 0, -cfg.robot.leg_up)
-        self.legs[4].move_end_point(0, 0, -cfg.robot.leg_up)
-        self.legs[6].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(2, 0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(4, 0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(6, 0, 0, -cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
 
-        self.legs[1].move_end_point(delta_x_1, delta_y_1, cfg.robot.leg_up)
-        self.legs[3].move_end_point(delta_x_3, delta_y_3, cfg.robot.leg_up)
-        self.legs[5].move_end_point(delta_x_5, delta_y_5, cfg.robot.leg_up)
+        self.move_leg_endpoint(1, delta_x_1, delta_y_1, cfg.robot.leg_up)
+        self.move_leg_endpoint(3, delta_x_3, delta_y_3, cfg.robot.leg_up)
+        self.move_leg_endpoint(5, delta_x_5, delta_y_5, cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
 
-        self.legs[1].move_end_point(0, 0, -cfg.robot.leg_up)
-        self.legs[3].move_end_point(0, 0, -cfg.robot.leg_up)
-        self.legs[5].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(1, 0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(3, 0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(5, 0, 0, -cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
 
     def switch_mode(self, mode: str):
@@ -398,44 +403,40 @@ class Kinematics:
         center_x = 0
         center_y = 0
 
-        for leg in [self.legs[2], self.legs[4], self.legs[6]]:
+        for leg_num in [2, 4, 6]:
+            leg = self.legs[leg_num]
             x_new, y_new = turn_on_angle(center_x, center_y, leg.C.x, leg.C.y, angle)
             delta_x = x_new - leg.C.x
             delta_y = y_new - leg.C.y
 
-            leg.move_end_point(delta_x, delta_y, cfg.robot.leg_up)
+            self.move_leg_endpoint(leg_num, delta_x, delta_y, cfg.robot.leg_up)
 
         if not only_body:
             self.add_angles_snapshot()
 
-        for leg in [self.legs[2], self.legs[4], self.legs[6]]:
-            leg.move_end_point(0, 0, -cfg.robot.leg_up)
+        for leg_num in [2, 4, 6]:
+            self.move_leg_endpoint(leg_num, 0, 0, -cfg.robot.leg_up)
 
         if not only_body:
             self.add_angles_snapshot()
 
-        for leg in [self.legs[1], self.legs[3], self.legs[5]]:
+        for leg_num in [1, 3, 5]:
+            leg = self.legs[leg_num]
             x_new, y_new = turn_on_angle(center_x, center_y, leg.C.x, leg.C.y, angle)
             delta_x = x_new - leg.C.x
             delta_y = y_new - leg.C.y
 
-            leg.move_end_point(delta_x, delta_y, cfg.robot.leg_up)
+            self.move_leg_endpoint(leg_num, delta_x, delta_y, cfg.robot.leg_up)
 
         if not only_body:
             self.add_angles_snapshot()
 
-        for leg in [self.legs[1], self.legs[3], self.legs[5]]:
-            leg.move_end_point(0, 0, -cfg.robot.leg_up)
+        for leg_num in [1, 3, 5]:
+            self.move_leg_endpoint(leg_num, 0, 0, -cfg.robot.leg_up)
 
         self.add_angles_snapshot('endpoint')
 
         self.body_to_center()
-
-    def move_leg_endpoint(self, leg_num, leg_delta, snapshot_type='endpoint', add_snapshot=True):        
-        self.legs[leg_num].move_end_point(*leg_delta)
-        if add_snapshot:
-            self.add_angles_snapshot(snapshot_type)
-        #print(f'move_leg_endpoint. Leg {leg_num}. C: {self.legs[leg_num].C}')
 
     """
     Two phased moves
@@ -445,28 +446,28 @@ class Kinematics:
         self.body_movement(round(delta_x / 2, 1), round(delta_y / 2, 1), 0)
         #self.body_movement(round(delta_x / 4, 1), round(delta_y / 4, 1), 0)
 
-        for leg in [self.legs[1], self.legs[3], self.legs[5]]:
-            leg.move_end_point(delta_x, delta_y, cfg.robot.leg_up)
+        for leg_num in [1, 3, 5]:
+            self.move_leg_endpoint(leg_num, delta_x, delta_y, cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
 
         #self.body_movement(round(delta_x / 4, 1), round(delta_y / 4, 1), 0)
 
-        for leg in [self.legs[1], self.legs[3], self.legs[5]]:
-            leg.move_end_point(0, 0, -cfg.robot.leg_up)
+        for leg_num in [1, 3, 5]:
+            self.move_leg_endpoint(leg_num, 0, 0, -cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
         
     def move_2_legs_phased_24(self, delta_x: int = 0, delta_y: int = 0) -> None:
         self.body_movement(round(delta_x / 2, 1), round(delta_y / 2, 1), 0)
         #self.body_movement(round(delta_x / 4, 1), round(delta_y / 4, 1), 0)
 
-        for leg in [self.legs[2], self.legs[4], self.legs[6]]:
-            leg.move_end_point(delta_x, delta_y, cfg.robot.leg_up)
+        for leg_num in [2, 4, 6]:
+            self.move_leg_endpoint(leg_num, delta_x, delta_y, cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
 
         #self.body_movement(round(delta_x / 4, 1), round(delta_y / 4, 1), 0)
 
-        for leg in [self.legs[2], self.legs[4], self.legs[6]]:
-            leg.move_end_point(0, 0, -cfg.robot.leg_up)
+        for leg_num in [2, 4, 6]:
+            self.move_leg_endpoint(leg_num, 0, 0, -cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')      
     
     
@@ -475,75 +476,76 @@ class Kinematics:
     """
 
     def wave_gait(self):
-        self.legs[1].move_end_point(9, 0, cfg.robot.leg_up)
+        self.move_leg_endpoint(1, 9, 0, cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
 
         for leg_num, legs_prev in zip([2, 3, 6, 5, 4], [1, 2, 3, 6, 5]):
-            self.legs[legs_prev].move_end_point(0, 0, -cfg.robot.leg_up)
-            self.legs[leg_num].move_end_point(9, 0, cfg.robot.leg_up)
+            self.move_leg_endpoint(legs_prev, 0, 0, -cfg.robot.leg_up)
+            self.move_leg_endpoint(leg_num, 9, 0, cfg.robot.leg_up)
             #self.add_angles_snapshot('endpoints')
             #leg.move_end_point(0, 0, -cfg.robot.leg_up)
             #self.add_angles_snapshot('endpoints')
             self.body_movement(1.5, 0, 0)
-        self.legs[4].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(4, 0, 0, -cfg.robot.leg_up)
         self.body_movement(1.5, 0, 0)
     
     def ripple_gait(self):
-        self.legs[1].move_end_point(9, 0, cfg.robot.leg_up)
-        self.legs[4].move_end_point(9, 0, cfg.robot.leg_up)
+        self.move_leg_endpoint(1, 9, 0, cfg.robot.leg_up)
+        self.move_leg_endpoint(4, 9, 0, cfg.robot.leg_up)
         self.body_movement(1.5, 0, 0, False)
         self.add_angles_snapshot('endpoint')
 
-        self.legs[1].move_end_point(0, 0, -cfg.robot.leg_up)
-        self.legs[4].move_end_point(0, 0, -cfg.robot.leg_up)
-        self.legs[2].move_end_point(9, 0, cfg.robot.leg_up)
-        self.legs[6].move_end_point(9, 0, cfg.robot.leg_up)
+        self.move_leg_endpoint(1, 0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(4, 0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(2, 9, 0, cfg.robot.leg_up)
+        self.move_leg_endpoint(6, 9, 0, cfg.robot.leg_up)
         self.body_movement(3, 0, 0, False)
         self.add_angles_snapshot('endpoint')
 
-        self.legs[2].move_end_point(0, 0, -cfg.robot.leg_up)
-        self.legs[6].move_end_point(0, 0, -cfg.robot.leg_up)
-        self.legs[3].move_end_point(9, 0, cfg.robot.leg_up)
-        self.legs[5].move_end_point(9, 0, cfg.robot.leg_up)
+        self.move_leg_endpoint(2, 0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(6, 0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(3, 9, 0, cfg.robot.leg_up)
+        self.move_leg_endpoint(5, 9, 0, cfg.robot.leg_up)
         self.body_movement(3, 0, 0, False)
         self.add_angles_snapshot('endpoint')
 
-        self.legs[3].move_end_point(0, 0, -cfg.robot.leg_up)
-        self.legs[5].move_end_point(0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(3, 0, 0, -cfg.robot.leg_up)
+        self.move_leg_endpoint(5, 0, 0, -cfg.robot.leg_up)
         self.body_movement(1.5, 0, 0, False)
         self.add_angles_snapshot('endpoint')
 
     
     def hit(self):
         self.body_movement(-7, 0, 0)
-        for leg in [self.legs[1], self.legs[6]]:
-            leg.move_end_point(0, 0, 7 + cfg.robot.leg_up)
+        for leg_num in [1, 6]:
+            self.move_leg_endpoint(leg_num, 0, 0, 7 + cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
 
-        self.legs[1].move_end_point(0, -10, 0)
-        self.legs[6].move_end_point(0, 10, 0)
+        self.move_leg_endpoint(1, 0, -10, 0)
+        self.move_leg_endpoint(6, 0, 10, 0)
         self.add_angles_snapshot('endpoints')
 
         forward_move = 8
-        self.legs[1].move_end_point(forward_move, 0, 0)
+        self.move_leg_endpoint(1, forward_move, 0, 0)
         self.add_angles_snapshot('endpoints')
 
-        self.legs[1].move_end_point(-forward_move, 0, 0)
-        self.legs[6].move_end_point(forward_move, 0, 0)
+        self.move_leg_endpoint(1, -forward_move, 0, 0)
+        self.move_leg_endpoint(6, forward_move, 0, 0)
         self.add_angles_snapshot('endpoints')
 
-        self.legs[6].move_end_point(-forward_move, 0, 0)
+        self.move_leg_endpoint(6, -forward_move, 0, 0)
         self.add_angles_snapshot('endpoints')
 
-        self.legs[1].move_end_point(0, 10, 0)
-        self.legs[6].move_end_point(0, -10, 0)
+        self.move_leg_endpoint(1, 0, 10, 0)
+        self.move_leg_endpoint(6, 0, -10, 0)
         self.add_angles_snapshot('endpoints')
 
-        for leg in [self.legs[1], self.legs[6]]:
-            leg.move_end_point(0, 0, -7 - cfg.robot.leg_up)
+        for leg_num in [1, 6]:
+            self.move_leg_endpoint(leg_num, 0, 0, -7 - cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
         self.body_movement(7, 0, 0)
     
+    """
     def play1(self):
         self.body_movement(0, 0, 5)
         for leg in [self.legs[1], self.legs[2], self.legs[3]]:
@@ -568,7 +570,7 @@ class Kinematics:
         self.body_movement(0, -10, 0)
         self.body_movement(14, 0, 0)
         self.body_movement(-7, 5, -5)
-    
+    """
     # feedback moves
     def leg_move_custom(self, leg_num, mode, leg_delta=[0, 0, 0], add_snapshot=True):
         if mode == 'touch':
@@ -611,7 +613,7 @@ class Kinematics:
         new_delta = [round(target_x - leg.C.x, 1), round(target_y - leg.C.y, 1), round(target_z - leg.C.z + min_z, 1)]
         print(f'Legnum: {leg_num}.\nOriginal delta: {leg_delta}\nNew delta: {new_delta}')
         self.logger.info(f'move_leg_endpoint_abs. Legnum: {leg_num}.\nOriginal delta: {leg_delta}\nNew delta: {new_delta}')
-        self.legs[leg_num].move_end_point(*new_delta)
+        self.move_leg_endpoint(leg_num, *new_delta)
         #self.legs_deltas[leg_num] = [x + y for x, y in zip(self.legs_deltas[leg_num], leg_delta)]        
         if add_snapshot:
             self.add_angles_snapshot(snapshot_type)
