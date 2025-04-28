@@ -342,9 +342,9 @@ def get_angles_for_sequence(move: Move, robot_position: RobotPosition):
         rk.move_2_legs_phased_13(-FORWARD_LEGS_2LEG_CM, FORWARD_LEGS_2LEG_CM)
         rk.move_2_legs_phased_24(-FORWARD_LEGS_2LEG_CM, FORWARD_LEGS_2LEG_CM)
     elif move.move_type == 'turn_left_fb':
-        rk.turn_move(20)
+        rk.turn_move(30)
     elif move.move_type == 'turn_right_fb':
-        rk.turn_move(-20)
+        rk.turn_move(-30)
     elif move.move_type == 'body_to_center':
         rk.body_to_center()
     elif move.move_type == 'endpoint':

@@ -253,7 +253,8 @@ def tettas_ok(l1t, l2t, l3t, l4t, l5t, l6t, logger):
     l4t = convert_tetta(l4t, 4)
     l5t = convert_tetta(l5t, 5)
     l6t = convert_tetta(l6t, 6)
-    tettas_limit = 12
+    
+    tettas_limit = 24
     if l2t - l1t > tettas_limit:
         logger.error(f"Alarm1: {l2t}, {l1t}")
         return False

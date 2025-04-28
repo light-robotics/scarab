@@ -6,9 +6,13 @@ class leg:
     d = 0
 
 class robot:
-    horizontal_x = 16
-    horizontal_y = 16
+    horizontal_x = 17
+    horizontal_y = 17
     vertical = 10
+
+    x_offset = 0
+    y_offset = 0
+    middle_leg_offset = 6
 
     touch_down = -5
     touch_down_iterations = 5
@@ -23,10 +27,6 @@ class robot:
     fb_one_leg_balance_value = -6
     fb_balance_value = -3 # body
     fb_inward_delta = 1
-
-    x_offset = 0
-    y_offset = 0
-    middle_leg_offset = 8
 
     leg_up = 9
 
