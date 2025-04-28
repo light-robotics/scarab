@@ -1,1 +1,1 @@
-25,disable_torque,1000
+151,disable_torque,1000

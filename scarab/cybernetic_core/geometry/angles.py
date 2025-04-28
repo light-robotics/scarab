@@ -254,20 +254,25 @@ def tettas_ok(l1t, l2t, l3t, l4t, l5t, l6t, logger):
     l5t = convert_tetta(l5t, 5)
     l6t = convert_tetta(l6t, 6)
     
-    tettas_limit = 24
-    if l2t - l1t > tettas_limit:
+    tettas_limit = 12
+    same_sign_tettas_limit = 20
+    if (l2t*l1t < 0 and l2t - l1t > tettas_limit) \
+        or (l2t*l1t > 0 and l2t - l1t > same_sign_tettas_limit):
         logger.error(f"Alarm1: {l2t}, {l1t}")
         return False
 
-    if l3t - l2t > tettas_limit:
+    if (l3t*l2t < 0 and l3t - l2t > tettas_limit) \
+        or (l3t*l2t > 0 and l3t - l2t > same_sign_tettas_limit):
         logger.error(f"Alarm2: {l3t}, {l2t}")
         return False
 
-    if l5t - l4t > tettas_limit:
+    if (l5t*l4t < 0 and l5t - l4t > tettas_limit) \
+        or (l5t*l4t > 0 and l5t - l4t > same_sign_tettas_limit):
         logger.error(f"Alarm3: {l5t}, {l4t}")
         return False
 
-    if l6t - l5t > tettas_limit:
+    if (l6t*l5t < 0 and l6t - l5t > tettas_limit) \
+        or (l6t*l5t > 0 and l6t - l5t > same_sign_tettas_limit):
         logger.error(f"Alarm4: {l6t}, {l5t}")
         return False
    

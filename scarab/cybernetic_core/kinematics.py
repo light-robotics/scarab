@@ -103,6 +103,9 @@ class Leg:
         self.C.move(delta_x, delta_y, delta_z)
         #print(f'C after: {self.C}')
         self.update_angles()
+    
+    def __repr__(self):
+        return f't: {round(math.degrees(self.tetta), 2)}, a: {round(math.degrees(self.alpha), 2)}, b: {round(math.degrees(self.beta), 2)}'
 
 class Kinematics:
     """
@@ -145,8 +148,10 @@ class Kinematics:
         self.check_tettas()
     
     def move_leg_mountpoint(self, legnum, delta_x, delta_y, delta_z):
+        self.logger.info(f'Leg {legnum}. {self.legs[legnum]}')
         self.legs[legnum].move_mount_point(delta_x, delta_y, delta_z)
-        self.check_tettas()
+        self.logger.info(f'Leg {legnum}. {self.legs[legnum]}')
+        
 
     def reset_history(self):
         self.angles_history = []
@@ -288,7 +293,7 @@ class Kinematics:
 
         for leg_num in self.legs.keys():
             self.move_leg_mountpoint(leg_num, delta_x, delta_y, delta_z)
-
+        self.check_tettas()
         if snapshot:
             self.add_angles_snapshot('body')
 
