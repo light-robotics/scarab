@@ -172,7 +172,7 @@ def get_sequence_for_command(command: str, kwargs=None):
                 'deltas': {
                     1: [cfg.modes.walking_mode.x, cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
                     3: [-cfg.modes.walking_mode.x, cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
-                    5: [0, -cfg.modes.walking_mode.y, cfg.robot.reset_touch_up]
+                    5: [0, -cfg.modes.walking_mode.y - cfg.robot.middle_leg_offset, cfg.robot.reset_touch_up]
                 }
                 }))
     
@@ -185,7 +185,7 @@ def get_sequence_for_command(command: str, kwargs=None):
         sequence.append(Move('endpoint_absolute', 
                              {'leg': [2, 4, 6],
                             'deltas': {
-                                2: [0, cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
+                                2: [0, cfg.modes.walking_mode.y + cfg.robot.middle_leg_offset, cfg.robot.reset_touch_up],
                                 4: [-cfg.modes.walking_mode.x, -cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
                                 6: [cfg.modes.walking_mode.x, -cfg.modes.walking_mode.y, cfg.robot.reset_touch_up]
                             }
