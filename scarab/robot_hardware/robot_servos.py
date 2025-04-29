@@ -194,6 +194,7 @@ class RobotServos:
         
         #print(type(angles), angles.__dict__)
         # TODO: make good tettas compare
+        """
         bad_move = False
         if angles.__dict__['l2t'] - angles.__dict__['l1t'] > 10:
             self.logger.warning(f"Alarm1: {angles.__dict__['l2t']}, {angles.__dict__['l1t']}")
@@ -210,14 +211,14 @@ class RobotServos:
         if angles.__dict__['l6t'] - angles.__dict__['l5t'] > 10:
             self.logger.warning(f"Alarm4: {angles.__dict__['l6t']}, {angles.__dict__['l5t']}")
             bad_move = True
+        """
+        #if not bad_move:
+        self.send_command_to_servos(angles, rate)
+        self.logger.info(f'Command sent. Rate: {rate}, angles: {angles}')
 
-        if not bad_move:
-            self.send_command_to_servos(angles, rate)
-            self.logger.info(f'Command sent. Rate: {rate}, angles: {angles}')
-
-            time.sleep(rate / 1000)
-        else:
-            self.logger.error('Move skipped due to tetta error')
+        time.sleep(rate / 1000)
+        #else:
+        #    self.logger.error('Move skipped due to tetta error')
         return self.get_current_angles()
             
     def set_servo_values_not_paced(self, angles):

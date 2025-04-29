@@ -145,7 +145,10 @@ class RobotDualSense(DualSense):
                 else:
                     self.command_writer.write_command('forward_two_legged', cfg.speed.run)
             elif self.left_y < -0.6 and abs(self.left_x) < 0.35:
-                self.command_writer.write_command('backward_two_legged', cfg.speed.run)
+                if self.feedback_mode_on:
+                    self.command_writer.write_command('backward_two_legged_fb', cfg.speed.run)
+                else:
+                    self.command_writer.write_command('backward_two_legged', cfg.speed.run)
             elif self.left_x > 0.6 and abs(self.left_y) < 0.35:
                 if self.feedback_mode_on:
                     self.command_writer.write_command('turn_right_fb', cfg.speed.run)
@@ -317,8 +320,10 @@ class RobotDualSense(DualSense):
         #    self.command_writer.write_command('lidar_scan', 1000)
         #elif self.mode in [FenixModes.WALKING]:
         #    self.command_writer.write_command('approach_obstacle', 300)
-        #else:
-        if self.mode == FenixModes.BATTLE:
+        #else: reset_onelegged
+        if self.feedback_mode_on:
+            self.command_writer.write_command('reset_onelegged', 1000)
+        elif self.mode == FenixModes.BATTLE:
            self.command_writer.write_command('hit_1', cfg.speed.walk)
         elif self.mode == FenixModes.RUN:
             self.command_writer.write_command('descend_2_legs', 500)

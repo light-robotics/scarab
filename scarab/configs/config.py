@@ -6,8 +6,8 @@ class leg:
     d = 0
 
 class robot:
-    horizontal_x = 17
-    horizontal_y = 17
+    horizontal_x = 18
+    horizontal_y = 18
     vertical = 10
 
     x_offset = 0
@@ -16,9 +16,9 @@ class robot:
 
     touch_down = -5
     touch_down_iterations = 5
-    touch_up = 25
-    feedback_body_up = 25
-    reset_touch_up = 25
+    touch_up = 24
+    feedback_body_up = 24
+    reset_touch_up = 24
     reset_feedback_body_up = 20
     
     balance_iterations = 5

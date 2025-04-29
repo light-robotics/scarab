@@ -159,6 +159,94 @@ def get_sequence_for_command(command: str, kwargs=None):
         #    Move('body_movement', 
         #        {'deltas': [round(cfg.moves.forward_body_2_leg_cm / 2, 1), 0, 0]}
         #    ))
+    elif command == 'backward_two_legged_fb':
+        for _ in range(cfg.robot.balance_iterations):
+            sequence.append(Move('balance', {}))
+        
+        #sequence.append(Move('body_movement', {'deltas': [0, 0, 3*UP_OR_DOWN_CM]}))
+        sequence.append(Move('body_absolute', {'z': cfg.robot.feedback_body_up}))
+        
+        sequence.append(Move('endpoint_absolute', {
+                'leg': [1, 3, 5], 
+                'deltas': {
+                    1: [None, None, cfg.robot.touch_up],
+                    3: [None, None, cfg.robot.touch_up],
+                    5: [None, None, cfg.robot.touch_up]
+                }
+                }))
+    
+        sequence.append(Move('endpoint_absolute', {
+                'leg': [1, 3, 5], 
+                'deltas': {
+                    1: [
+                        cfg.modes.walking_mode.x - cfg.moves.forward_body_2_leg_cm, 
+                        cfg.modes.walking_mode.y, 
+                        None
+                    ],
+                    3: [
+                        -cfg.modes.walking_mode.x - cfg.moves.forward_body_2_leg_cm, 
+                        cfg.modes.walking_mode.y, 
+                        None
+                    ],
+                    5: [
+                        -cfg.moves.forward_body_2_leg_cm, 
+                        -cfg.modes.walking_mode.y - cfg.robot.middle_leg_offset, 
+                        None
+                    ]
+                }
+                }))
+
+        for _ in range(cfg.robot.touch_down_iterations):
+            sequence.append(Move('touch', {}))
+
+        for _ in range(cfg.robot.balance_iterations):
+            sequence.append(Move('balance', {}))
+        
+        sequence.append(
+            Move('body_movement', 
+                {'deltas': [-round(cfg.moves.forward_body_2_leg_cm, 1), 0, 0]}
+            ))
+
+        sequence.append(Move('endpoint_absolute', 
+                             {'leg': [2, 4, 6],
+                            'deltas': {
+                                2: [None, None, cfg.robot.touch_up],
+                                4: [None, None, cfg.robot.touch_up],
+                                6: [None, None, cfg.robot.touch_up]
+                            }
+                            }))
+        
+        sequence.append(Move('endpoint_absolute',
+                    {'leg': [2, 4, 6], 
+                     'deltas': { 
+                        2: [
+                             0, 
+                             cfg.modes.walking_mode.y + cfg.robot.middle_leg_offset, 
+                             None
+                        ],
+                        4: [
+                            -cfg.modes.walking_mode.x, 
+                            -cfg.modes.walking_mode.y, 
+                            None
+                        ],
+                        6: [
+                            cfg.modes.walking_mode.x, 
+                            -cfg.modes.walking_mode.y, 
+                            None
+                        ]
+                     }
+                    }))        
+        
+        for _ in range(cfg.robot.touch_down_iterations):
+            sequence.append(Move('touch', {}))
+
+        for _ in range(cfg.robot.balance_iterations):
+            sequence.append(Move('balance', {}))
+        
+        #sequence.append(
+        #    Move('body_movement', 
+        #        {'deltas': [round(cfg.moves.forward_body_2_leg_cm / 2, 1), 0, 0]}
+        #    ))
 
     elif command == 'reset':
         for _ in range(cfg.robot.balance_iterations):
@@ -196,7 +284,32 @@ def get_sequence_for_command(command: str, kwargs=None):
 
         for _ in range(cfg.robot.balance_iterations):
             sequence.append(Move('balance', {}))
+    elif command == 'reset_onelegged':
+        for _ in range(cfg.robot.balance_iterations):
+            sequence.append(Move('balance', {}))
+
+        leg_deltas = {
+            1: [cfg.modes.walking_mode.x, cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
+            2: [0, cfg.modes.walking_mode.y + cfg.robot.middle_leg_offset, cfg.robot.reset_touch_up],
+            3: [-cfg.modes.walking_mode.x, cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
+            4: [-cfg.modes.walking_mode.x, -cfg.modes.walking_mode.y, cfg.robot.reset_touch_up],
+            5: [0, -cfg.modes.walking_mode.y - cfg.robot.middle_leg_offset, cfg.robot.reset_touch_up],
+            6: [cfg.modes.walking_mode.x, -cfg.modes.walking_mode.y, cfg.robot.reset_touch_up]
+        }        
+        for leg in [1, 2, 3, 4, 5, 6]:
+            sequence.append(Move('endpoint_absolute', {
+                    'leg': [leg], 
+                    'deltas': {
+                        leg: leg_deltas[leg]
+                    }
+                    }))
         
+            for _ in range(cfg.robot.touch_down_iterations):
+                sequence.append(Move('touch', {}))
+
+            for _ in range(cfg.robot.balance_iterations):
+                sequence.append(Move('balance', {}))
+
     elif command == 'wave_gait':
         #sequence.append(Move('body_movement', {'deltas': [cfg.moves.forward_body_1_leg_cm/2, 0, 0]}))
         for leg in [1, 2, 3, 6, 5, 4]:            
