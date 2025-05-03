@@ -415,29 +415,33 @@ class Kinematics:
                            0, 
                            snapshot)
 
-    def turn_move(self, angle_deg):
-        self.turn(-angle_deg)
+    def turn_move(self, angle_deg, mode=None):
+        self.turn(-angle_deg, mode=mode)
         self.turn(angle_deg, only_body=True)
 
-    def turn(self, angle_deg, only_body=False):
+    def turn(self, angle_deg, only_body=False, mode=None):
         angle = math.radians(angle_deg)
 
         center_x = 0
         center_y = 0
 
+        leg_up = cfg.robot.leg_up
+        if mode == "fb":
+            leg_up *= 2
+
         for leg_num in [2, 4, 6]:
             leg = self.legs[leg_num]
             x_new, y_new = turn_on_angle(center_x, center_y, leg.C.x, leg.C.y, angle)
             delta_x = x_new - leg.C.x
             delta_y = y_new - leg.C.y
 
-            self.move_leg_endpoint(leg_num, delta_x, delta_y, cfg.robot.leg_up)
+            self.move_leg_endpoint(leg_num, delta_x, delta_y, leg_up)
 
         if not only_body:
             self.add_angles_snapshot()
 
         for leg_num in [2, 4, 6]:
-            self.move_leg_endpoint(leg_num, 0, 0, -cfg.robot.leg_up)
+            self.move_leg_endpoint(leg_num, 0, 0, -leg_up)
 
         if not only_body:
             self.add_angles_snapshot()
@@ -448,13 +452,13 @@ class Kinematics:
             delta_x = x_new - leg.C.x
             delta_y = y_new - leg.C.y
 
-            self.move_leg_endpoint(leg_num, delta_x, delta_y, cfg.robot.leg_up)
+            self.move_leg_endpoint(leg_num, delta_x, delta_y, leg_up)
 
         if not only_body:
             self.add_angles_snapshot()
 
         for leg_num in [1, 3, 5]:
-            self.move_leg_endpoint(leg_num, 0, 0, -cfg.robot.leg_up)
+            self.move_leg_endpoint(leg_num, 0, 0, -leg_up)
 
         self.add_angles_snapshot('endpoint')
 

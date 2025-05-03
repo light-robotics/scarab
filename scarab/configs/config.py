@@ -18,15 +18,15 @@ class robot:
     touch_down_iterations = 5
     touch_up = 24
     feedback_body_up = 24
-    reset_touch_up = 24
+    reset_touch_up = 28
     reset_feedback_body_up = 20
     
-    balance_iterations = 5
+    balance_iterations = 8
 
-    fb_pre_balance_value = 3
+    fb_pre_balance_value = 2
     fb_one_leg_balance_value = -6
     fb_balance_value = -3 # body
-    fb_inward_delta = 1
+    fb_inward_delta = 0 # 1
 
     leg_up = 9
 
