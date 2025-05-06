@@ -12,6 +12,9 @@ Feedback versions:
 - python /scarab/scarab/robot_hardware/enders2.py
 - python /scarab/scarab/robot_hardware/read_mpu6050.py
 
+Video streaming:
+- sudo ffmpeg -s 1024x576 -f video4linux2 -i /dev/video0 -f mpegts -codec:v mpeg1video -b:v 4000k -r 30 http://{nexus_ip}:8081/12345/1024/576/
+
 Useful:
  - vcgencmd measure_temp
  - dmesg

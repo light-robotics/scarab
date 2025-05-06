@@ -542,16 +542,16 @@ class Kinematics:
 
     
     def hit(self):
-        self.body_movement(-7, 0, 0)
+        self.body_movement(-5, 0, 0)
         for leg_num in [1, 6]:
-            self.move_leg_endpoint(leg_num, 0, 0, 7 + cfg.robot.leg_up)
+            self.move_leg_endpoint(leg_num, 0, 0, 14 + cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
 
         self.move_leg_endpoint(1, 0, -10, 0)
         self.move_leg_endpoint(6, 0, 10, 0)
         self.add_angles_snapshot('endpoints')
 
-        forward_move = 8
+        forward_move = 14
         self.move_leg_endpoint(1, forward_move, 0, 0)
         self.add_angles_snapshot('endpoints')
 
@@ -567,36 +567,26 @@ class Kinematics:
         self.add_angles_snapshot('endpoints')
 
         for leg_num in [1, 6]:
-            self.move_leg_endpoint(leg_num, 0, 0, -7 - cfg.robot.leg_up)
+            self.move_leg_endpoint(leg_num, 0, 0, -14 - cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
-        self.body_movement(7, 0, 0)
+        self.body_movement(5, 0, 0)
     
-    """
-    def play1(self):
-        self.body_movement(0, 0, 5)
-        for leg in [self.legs[1], self.legs[2], self.legs[3]]:
-            leg.move_end_point(0, 0, 10)
-        for leg in [self.legs[4], self.legs[5], self.legs[6]]:
-            leg.move_end_point(0, 0, -10)
+    def hook(self, leg):
+        if leg == 1:
+            side_move = 10
+        if leg == 6:
+            side_move = -10
+        forward_move = 18
+        self.move_leg_endpoint(leg, 0, side_move, 14 + cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
-        for leg in [self.legs[1], self.legs[2], self.legs[3]]:
-            leg.move_end_point(0, 0, -20)
-        for leg in [self.legs[4], self.legs[5], self.legs[6]]:
-            leg.move_end_point(0, 0, 20)
-        self.add_angles_snapshot('endpoints')
-        for leg in [self.legs[1], self.legs[2], self.legs[3]]:
-            leg.move_end_point(0, 0, 10)
-        for leg in [self.legs[4], self.legs[5], self.legs[6]]:
-            leg.move_end_point(0, 0, -10)
+        self.move_leg_endpoint(leg, forward_move, -2*side_move, 0)
         self.add_angles_snapshot('endpoints')
         
-        self.body_movement(7, 0, 0)
-        self.body_movement(0, 5, 0)
-        self.body_movement(-14, 0, 0)
-        self.body_movement(0, -10, 0)
-        self.body_movement(14, 0, 0)
-        self.body_movement(-7, 5, -5)
-    """
+        self.move_leg_endpoint(leg, -forward_move, side_move, 0)
+        self.add_angles_snapshot('endpoints')
+        self.move_leg_endpoint(leg, 0, 0, -14 - cfg.robot.leg_up)
+        self.add_angles_snapshot('endpoints')
+    
     # feedback moves
     def leg_move_custom(self, leg_num, mode, leg_delta=[0, 0, 0], add_snapshot=True):
         if mode == 'touch':

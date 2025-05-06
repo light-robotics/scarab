@@ -18,7 +18,7 @@ class robot:
     touch_down_iterations = 5
     touch_up = 24
     feedback_body_up = 24
-    reset_touch_up = 28
+    reset_touch_up = 26
     reset_feedback_body_up = 20
     
     balance_iterations = 8
@@ -41,7 +41,7 @@ class movement:
 class speed:
     run = 500
     walk = 500
-    hit = 250
+    hit = 200
     ripple_gait = 500
     wave_gait = 350
     touch = 600

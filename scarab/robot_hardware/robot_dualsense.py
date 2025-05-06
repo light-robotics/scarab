@@ -190,6 +190,7 @@ class RobotDualSense(DualSense):
             self.command_writer.write_command('wave_gait', cfg.speed.wave_gait)
         elif self.mode == FenixModes.BATTLE:
             self.command_writer.write_command('hit', cfg.speed.hit)
+            #self.command_writer.write_command('right_hook', cfg.speed.hit)
         elif self.mode == FenixModes.SENTRY:
             self.command_writer.write_command('ripple_gait', cfg.speed.ripple_gait)
         
@@ -305,7 +306,7 @@ class RobotDualSense(DualSense):
         if self.feedback_mode_on:
             self.command_writer.write_command('reset', 1000)
         elif self.mode == FenixModes.BATTLE:
-           self.command_writer.write_command('hit_2', cfg.speed.walk)
+           self.command_writer.write_command('right_hook', cfg.speed.hit)
         elif self.mode == FenixModes.WALKING:
             self.command_writer.write_command('touching', 2000)           
         elif self.mode == FenixModes.RUN:
@@ -324,7 +325,7 @@ class RobotDualSense(DualSense):
         if self.feedback_mode_on:
             self.command_writer.write_command('reset_onelegged', 1000)
         elif self.mode == FenixModes.BATTLE:
-           self.command_writer.write_command('hit_1', cfg.speed.walk)
+           self.command_writer.write_command('left_hook', cfg.speed.hit)
         elif self.mode == FenixModes.RUN:
             self.command_writer.write_command('descend_2_legs', 500)
         time.sleep(0.5)
