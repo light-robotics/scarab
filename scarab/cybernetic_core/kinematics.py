@@ -587,6 +587,33 @@ class Kinematics:
         self.move_leg_endpoint(leg, 0, 0, -14 - cfg.robot.leg_up)
         self.add_angles_snapshot('endpoints')
     
+    def jump(self):
+        self.body_movement(-7, 0, 0, True)
+        self.move_leg_endpoint(1, 0, -10, 14 + cfg.robot.leg_up)
+        self.move_leg_endpoint(6, 0, 10, 14 + cfg.robot.leg_up)
+        self.add_angles_snapshot('body')
+        
+        self.body_movement(12, 0, 12, False)
+        self.add_angles_snapshot('endpoint')
+        self.move_leg_endpoint(1, 22, 0, -15)
+        self.move_leg_endpoint(6, 22, 0, -15)
+        self.add_angles_snapshot('endpoint')
+
+        self.move_leg_endpoint(1, -22, 0, 0)
+        self.move_leg_endpoint(6, -22, 0, 0)
+        self.add_angles_snapshot('body')
+        
+        self.body_movement(-5, 0, -12, True)
+
+        self.move_leg_endpoint(1, 0, 10, 15)
+        self.move_leg_endpoint(6, 0, -10, 15)
+        self.add_angles_snapshot('body')
+
+        self.move_leg_endpoint(1, 0, 0, -14 - cfg.robot.leg_up)
+        self.move_leg_endpoint(6, 0, 0, -14 - cfg.robot.leg_up)
+        self.add_angles_snapshot('body')
+
+
     # feedback moves
     def leg_move_custom(self, leg_num, mode, leg_delta=[0, 0, 0], add_snapshot=True):
         if mode == 'touch':

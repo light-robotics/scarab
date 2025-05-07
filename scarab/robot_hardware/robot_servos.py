@@ -76,6 +76,7 @@ class RobotServos:
                 assert config.angles_limits.tetta.min <= servo_value <= config.angles_limits.tetta.max
             sc.move_servo_to_angle(servo_num, servo_value, rate)
 
+    """
     def set_servo_values_paced(self, angles):
         _, max_angle_diff = self.get_angles_diff(angles)
         rate = round(max(self.speed * max_angle_diff / 45, self.max_speed)) # speed is normalized
@@ -186,7 +187,7 @@ class RobotServos:
         self.send_command_to_servos(adjusted_angles, rate)
         self.logger.info(f'Command sent. Rate: {rate}, angles: {adjusted_angles}')
         time.sleep(rate / 1000)
-    
+    """
     def set_servo_values_paced_wo_feedback(self, angles: RobotPosition):
         _, max_angle_diff = self.get_angles_diff(angles)
         rate = round(max(self.speed * max_angle_diff / 45, self.max_speed)) # speed is normalized
@@ -257,7 +258,7 @@ class RobotServos:
         # every command is executed over a computed time, depending on the angle
         _, max_angle_diff = self.get_angles_diff(fp, prev_fp)
         rate = round(max(self.speed * max_angle_diff / 45, self.max_speed)) # speed is normalized
-        wait_time = max(0, rate / 1000)
+        wait_time = min(50, max(0, rate / 1000))
 
         self.logger.info(f'max_angle_diff: {max_angle_diff}, self.speed : {self.speed}, self.speed * max_angle_diff / 45 : {self.speed * max_angle_diff / 45}')
         self.logger.info(f'Wait time : {wait_time}')

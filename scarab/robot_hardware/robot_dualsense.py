@@ -109,8 +109,13 @@ class RobotDualSense(DualSense):
             print(f'Flashlight for {value} power')
     
     def on_L1_press(self):
-        self.neopixel.issue_command('running_diodes', 'white', 255)
-        print('Running diodes white')
+        if self.mode == FenixModes.BATTLE:
+            self.command_writer.write_command('jump', 0)
+            time.sleep(0.3)
+            self.command_writer.write_command('none', 330)
+        else:
+            self.neopixel.issue_command('running_diodes', 'white', 255)
+            print('Running diodes white')
     
     def on_L2_press(self):
         self.neopixel.issue_command('running_diodes', 'red', 255)

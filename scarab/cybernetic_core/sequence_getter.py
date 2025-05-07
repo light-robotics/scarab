@@ -244,6 +244,8 @@ def get_sequence_for_command_cached(command: str, robot_position: RobotPosition,
         fk.reset()
     elif command == 'hit':
         fk.hit()
+    elif command == 'jump':
+        fk.jump()
     elif command == 'right_hook':
         fk.hook(1)
     elif command == 'left_hook':

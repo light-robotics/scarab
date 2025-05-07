@@ -168,8 +168,9 @@ class HTD45H:
     # because sometimes command does not work and target stays unchanged
     def move_servo_to_angle(self, id: int, angle: float, rate: int = 5000) -> None:
         position = neutral[id] + int(angle/0.24)
+        self.logger.info(f'Id : {id}. Target required : {position}. Angle: {angle}. Rate: {rate}')
         if position < 0:
-            self.logger.error(f'Id : {id}. Target required : {position}. Angle: {angle}')
+            self.logger.error(f'Id : {id}. Target required : {position}. Angle: {angle}. Rate: {rate}')
             position = 0
         num_attempts = 3
         for i in range(num_attempts):
