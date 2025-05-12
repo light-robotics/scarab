@@ -6,8 +6,8 @@ class leg:
     d = 0
 
 class robot:
-    horizontal_x = 18
-    horizontal_y = 18
+    horizontal_x = 11 # 18
+    horizontal_y = 11 # 18
     vertical = 10
 
     x_offset = 0
@@ -36,18 +36,20 @@ class robot:
     balance_offset = 2.5
 
 class movement:
-    command_advance_ms = 0 #0.05
+    command_advance_ms = 0.05
 
 class speed:
-    run = 500
+    run = 250
     walk = 500
     hit = 200
+    body = 600
     ripple_gait = 500
     wave_gait = 350
     touch = 600
     balance = 1000
     feedback_body = 700
     feedback_legs = 600
+    # run_slow_down_coef = 0.8 # start slowing down after 80% of move done
 
 @dataclass
 class limit:
@@ -103,7 +105,7 @@ class xy:
     y: int
 
 class modes:
-    run_mode = xy(9, 9)
+    run_mode = xy(10, 10)
     walking_mode = xy(10, 10)
     sentry_mode = xy(10, 10)
     battle_mode = xy(10, 10)

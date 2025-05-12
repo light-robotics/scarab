@@ -622,6 +622,10 @@ if __name__ == '__main__':
     m3 = HTD45H(port='/dev/ttyAMA3') # 13-16 # 9-12
     m4 = HTD45H(port='/dev/ttyAMA4') # 1-4   # 13-16
     
+    #for i in range(24):
+    #    m3.read_values(i)
+    #    time.sleep(0.0002)
+
     for i in [3, 4, 5, 8, 13, 14, 21, 22, 23]:
         m3.read_values(i)
         time.sleep(0.0002)

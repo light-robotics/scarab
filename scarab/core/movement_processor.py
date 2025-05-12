@@ -11,6 +11,7 @@ from cybernetic_core.geometry.angles import AnglesException
 from robot_hardware.robot_servos import RobotServos
 from core.utils.multiphase_moves import CommandsForwarder
 import configs.code_config as code_config
+from configs import config as cfg
 import logging.config
 from copy import deepcopy
 
@@ -34,7 +35,7 @@ class MovementProcessor:
 
         
         self.speed = 400
-        self.body_speed = 800
+        self.body_speed = cfg.speed.body
 
     def read_command(self) -> Optional[Union[str, int]]:        
         with open(code_config.movement_command_file, 'r') as f:
@@ -58,8 +59,8 @@ class MovementProcessor:
             'body_backward',
             'body_left',
             'body_right',            
-            'turn_right',
-            'turn_left'
+            'turn_left_two_legged',
+            'turn_right_two_legged'
             ]        
 
         if self.max_processed_command_id == 0:

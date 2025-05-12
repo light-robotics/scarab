@@ -63,19 +63,13 @@ def get_sequence_for_command_cached(command: str, robot_position: RobotPosition,
         fk.move_2_legs_phased_13(FORWARD_LEGS_2LEG_CM, 0)
     elif command == 'forward_3':
         # Legs 1 and 3 moved x2
-        for _ in range(3):
-            fk.move_2_legs_phased_24(2 * FORWARD_LEGS_2LEG_CM, 0)
-            fk.move_2_legs_phased_13(2 * FORWARD_LEGS_2LEG_CM, 0)
+        #for _ in range(3):
+        #    fk.move_2_legs_phased_24(2 * FORWARD_LEGS_2LEG_CM, 0)
+        #    fk.move_2_legs_phased_13(2 * FORWARD_LEGS_2LEG_CM, 0)
         fk.move_2_legs_phased_24(2 * FORWARD_LEGS_2LEG_CM, 0)
     elif command == 'forward_32':
         # Legs 1 and 3 moved x1
         fk.move_2_legs_phased_24(FORWARD_LEGS_2LEG_CM, 0)
-    elif command == 'approach_obstacle':
-        fk.move_2_legs_phased_13(5, 0)
-        for _ in range(4):
-            fk.move_2_legs_phased_24(10, 0)
-            fk.move_2_legs_phased_13(10, 0)
-        fk.move_2_legs_phased_24(5, 0)
     elif command == 'backward_1':
         # Legs 1 and 3 moved x1
         fk.move_2_legs_phased_13(-FORWARD_LEGS_2LEG_CM, 0)
@@ -97,41 +91,41 @@ def get_sequence_for_command_cached(command: str, robot_position: RobotPosition,
     
     elif command == 'strafe_right_1':
         # Legs 1 and 3 moved x1
-        fk.move_2_legs_phased_13(0, -FORWARD_LEGS_2LEG_CM)
+        fk.move_2_legs_phased_13(0, FORWARD_LEGS_2LEG_CM)
     elif command == 'strafe_right_2':
         # Legs 2 and 4 moved x2
-        fk.move_2_legs_phased_24(0, -2 * FORWARD_LEGS_2LEG_CM)
+        fk.move_2_legs_phased_24(0, 2 * FORWARD_LEGS_2LEG_CM)
     elif command == 'strafe_right_22':
         # Legs 2 and 4 moved x1
-        fk.move_2_legs_phased_24(0, -FORWARD_LEGS_2LEG_CM)
-    elif command == 'strafe_right_3':
-        # Legs 1 and 3 moved x2
-        for _ in range(3):
-            fk.move_2_legs_phased_13(0, -2 * FORWARD_LEGS_2LEG_CM)
-            fk.move_2_legs_phased_24(0, -2 * FORWARD_LEGS_2LEG_CM)
-        fk.move_2_legs_phased_13(0, -2 * FORWARD_LEGS_2LEG_CM)
-    elif command == 'strafe_right_32':
-        # Legs 1 and 3 moved x1
-        fk.move_2_legs_phased_13(0, -FORWARD_LEGS_2LEG_CM)
-
-    elif command == 'strafe_left_1':
-        # Legs 1 and 3 moved x1
-        fk.move_2_legs_phased_13(0, FORWARD_LEGS_2LEG_CM)
-    elif command == 'strafe_left_2':
-        # Legs 2 and 4 moved x2
-        fk.move_2_legs_phased_24(0, 2 * FORWARD_LEGS_2LEG_CM)
-    elif command == 'strafe_left_22':
-        # Legs 2 and 4 moved x1
         fk.move_2_legs_phased_24(0, FORWARD_LEGS_2LEG_CM)
-    elif command == 'strafe_left_3':
+    elif command == 'strafe_right_3':
         # Legs 1 and 3 moved x2
         for _ in range(3):
             fk.move_2_legs_phased_13(0, 2 * FORWARD_LEGS_2LEG_CM)
             fk.move_2_legs_phased_24(0, 2 * FORWARD_LEGS_2LEG_CM)
         fk.move_2_legs_phased_13(0, 2 * FORWARD_LEGS_2LEG_CM)
-    elif command == 'strafe_left_32':
+    elif command == 'strafe_right_32':
         # Legs 1 and 3 moved x1
         fk.move_2_legs_phased_13(0, FORWARD_LEGS_2LEG_CM)
+
+    elif command == 'strafe_left_1':
+        # Legs 1 and 3 moved x1
+        fk.move_2_legs_phased_13(0, -FORWARD_LEGS_2LEG_CM)
+    elif command == 'strafe_left_2':
+        # Legs 2 and 4 moved x2
+        fk.move_2_legs_phased_24(0, -2 * FORWARD_LEGS_2LEG_CM)
+    elif command == 'strafe_left_22':
+        # Legs 2 and 4 moved x1
+        fk.move_2_legs_phased_24(0, -FORWARD_LEGS_2LEG_CM)
+    elif command == 'strafe_left_3':
+        # Legs 1 and 3 moved x2
+        for _ in range(3):
+            fk.move_2_legs_phased_13(0, -2 * FORWARD_LEGS_2LEG_CM)
+            fk.move_2_legs_phased_24(0, -2 * FORWARD_LEGS_2LEG_CM)
+        fk.move_2_legs_phased_13(0, -2 * FORWARD_LEGS_2LEG_CM)
+    elif command == 'strafe_left_32':
+        # Legs 1 and 3 moved x1
+        fk.move_2_legs_phased_13(0, -FORWARD_LEGS_2LEG_CM)
     elif command == 'diagonal_forward_right':
         fk.move_2_legs_phased_13(FORWARD_LEGS_2LEG_CM, -FORWARD_LEGS_2LEG_CM)
         fk.move_2_legs_phased_24(FORWARD_LEGS_2LEG_CM, -FORWARD_LEGS_2LEG_CM)
@@ -221,13 +215,9 @@ def get_sequence_for_command_cached(command: str, robot_position: RobotPosition,
         fk.look_on_angle(0)
         fk.turn(-fk.side_look_angle, only_body=True)
     elif command == 'turn_left_two_legged':
-        fk.turn_move(-25)
-    elif command == 'turn_left_one_legged':
-        pass    
+        fk.turn_move(40)
     elif command == 'turn_right_two_legged':
-        fk.turn_move(25)
-    elif command == 'turn_right_one_legged':
-        pass    
+        fk.turn_move(-40)
     elif command == 'reposition_x_up':
         fk.reposition_legs(REPOSITION_CM, 0)
     elif command == 'reposition_x_down':

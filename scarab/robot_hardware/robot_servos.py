@@ -234,25 +234,24 @@ class RobotServos:
         self.logger.info(f'Wait time : {wait_time}')
         
         self.send_command_to_servos(angles, rate)
-        
         time.sleep(wait_time)
+        #time.sleep(0.8*wait_time)
+        #self.send_command_to_servos(angles, 2 * rate)
+        #time.sleep(0.4*wait_time)
         self.logger.info(f'[Move end][DIFF] Diff from target:')
         self.get_angles_diff(angles)
-        """
-        # alerting stuck tetta
-        diff = {}
-        for k, v in self.get_current_angles().__dict__.items():
-            diff[k] = angles.__dict__[k] - v
+    
+    def set_servo_values_for_running_quiter(self, angles, rate=config.speed.run):
+        wait_time = max(0, rate / 1000) # - config.movement.command_advance_ms)
+        self.logger.info(f'Wait time : {wait_time}')
         
-        result = ''
-        for tetta in ['l1t', 'l2t', 'l3t', 'l4t', 'l5t', 'l6t']:
-            if abs(diff[tetta]) > 4:
-                result += '1'
-            else:
-                result += '0'
-        with open('/scarab/scarab/wrk/neopixel_command.txt', 'w') as f:
-            f.write(f'{result},white,255')
-        """
+        self.send_command_to_servos(angles, rate)
+        #time.sleep(wait_time)
+        time.sleep(0.7*wait_time)
+        self.send_command_to_servos(angles, 3 * rate)
+        time.sleep(0.5*wait_time)
+        self.logger.info(f'[Move end][DIFF] Diff from target:')
+        self.get_angles_diff(angles)
 
     def set_servo_values_not_paced_v2(self, fp: RobotPosition, prev_fp: RobotPosition = None):
         # every command is executed over a computed time, depending on the angle

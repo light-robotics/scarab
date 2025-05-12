@@ -57,8 +57,8 @@ class MovementProcessor:
             'body_backward',
             'body_left',
             'body_right',            
-            'turn_right',
-            'turn_left'
+            'turn_left_two_legged',
+            'turn_right_two_legged'
             ]        
 
         if self.max_processed_command_id == 0:
