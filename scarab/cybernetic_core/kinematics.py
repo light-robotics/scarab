@@ -575,20 +575,6 @@ class Kinematics:
     
     def hit(self):
 
-        for legnum in [1, 3, 5]:
-            self.move_leg_endpoint(legnum, 0, 0, 3 + cfg.robot.leg_up)
-        self.add_angles_snapshot('body')
-        for legnum in [1, 3, 5]:
-            self.move_leg_endpoint(legnum, 0, 0, -3 - cfg.robot.leg_up)
-        self.add_angles_snapshot('body')
-
-        for legnum in [2, 4, 6]:
-            self.move_leg_endpoint(legnum, 0, 0, 3 + cfg.robot.leg_up)
-        self.add_angles_snapshot('body')
-        for legnum in [2, 4, 6]:
-            self.move_leg_endpoint(legnum, 0, 0, -3 - cfg.robot.leg_up)
-        self.add_angles_snapshot('body')
-
         self.body_movement(-7, 0, 10)
         
         self.move_leg_endpoint(1, -10, 0, 14 + cfg.robot.leg_up)
@@ -648,18 +634,36 @@ class Kinematics:
         self.move_leg_endpoint(6, 22, 0, -15)
         self.add_angles_snapshot('endpoint')
 
+        self.move_leg_endpoint(1, 0, 0, 15)
+        self.move_leg_endpoint(6, 0, 0, 15)
+        self.add_angles_snapshot('body')
+
         self.move_leg_endpoint(1, -22, 0, 0)
         self.move_leg_endpoint(6, -22, 0, 0)
         self.add_angles_snapshot('body')
         
         self.body_movement(-5, 0, -12, True)
 
-        self.move_leg_endpoint(1, 0, 10, 15)
-        self.move_leg_endpoint(6, 0, -10, 15)
+        self.move_leg_endpoint(1, 0, 10, 0)
+        self.move_leg_endpoint(6, 0, -10, 0)
         self.add_angles_snapshot('body')
 
         self.move_leg_endpoint(1, 0, 0, -14 - cfg.robot.leg_up)
         self.move_leg_endpoint(6, 0, 0, -14 - cfg.robot.leg_up)
+        self.add_angles_snapshot('body')
+
+        for legnum in [1, 3, 5]:
+            self.move_leg_endpoint(legnum, 0, 0, 5 + cfg.robot.leg_up)
+        self.add_angles_snapshot('body')
+        for legnum in [1, 3, 5]:
+            self.move_leg_endpoint(legnum, 0, 0, -5 - cfg.robot.leg_up)
+        self.add_angles_snapshot('body')
+
+        for legnum in [2, 4, 6]:
+            self.move_leg_endpoint(legnum, 0, 0, 5 + cfg.robot.leg_up)
+        self.add_angles_snapshot('body')
+        for legnum in [2, 4, 6]:
+            self.move_leg_endpoint(legnum, 0, 0, -5 - cfg.robot.leg_up)
         self.add_angles_snapshot('body')
 
 

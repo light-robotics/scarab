@@ -349,13 +349,13 @@ class RobotDualSense(DualSense):
         
     def on_x_press(self):
         self.mode = FenixModes.BATTLE
-        self.neopixel.issue_command('steady', color='purple')
+        self.neopixel.issue_command('steady', color='red')
         self.command_writer.write_command('battle_mode', 500)
         print('Switched mode to BATTLE')
 
     def on_triangle_press(self):
         self.mode = FenixModes.RUN
-        self.neopixel.issue_command('steady', color='red')
+        self.neopixel.issue_command('steady', color='purple')
         self.command_writer.write_command('run_mode', 500)
         print('Switched mode to RUN')
 
